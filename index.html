@@ -201,8 +201,8 @@
   }
 
   .section-panel {
-    min-width: 340px;
-    max-width: 340px;
+    min-width: 360px;
+    max-width: 360px;
     border-radius: 8px;
     border: 1px solid #4b5563;
     background: #e5e7eb;
@@ -252,7 +252,7 @@
 
   .slots {
     display: flex;
-    flex-direction: column; /* 1 at top */
+    flex-direction: column;
     gap: 2px;
   }
 
@@ -263,7 +263,7 @@
   }
 
   .slot-number {
-    width: 22px;
+    width: 24px;
     font-size: 8px;
     color: #4b5563;
     text-align: right;
@@ -305,8 +305,12 @@
     justify-content: center;
   }
 
-  .breaker-rcd .breaker-body-inner {
-    flex-basis: 26px;
+  .breaker-3p {
+    flex: 0 0 40px;
+  }
+
+  .breaker-3p-rcd {
+    flex: 0 0 52px;
   }
 
   .rocker {
@@ -362,7 +366,7 @@
 
   .rcd-test {
     position: absolute;
-    left: 2px;
+    right: 2px;
     bottom: 2px;
     width: 4px;
     height: 4px;
@@ -576,35 +580,59 @@
         label: "SECTION 1",
         tripStyle: "center",
         maxSlotsPerColumn: 24,
-        left: [
-          { id: "S1-L-01", label: "BOTTOM MUFF TOAST", devices: ["Bottom Muffin Toaster"], type: "mcb" },
-          { id: "S1-L-02", label: "TOP MUFF TOAST", devices: ["Top Muffin Toaster"], type: "mcb" },
-          { id: "S1-L-03", label: "MINI DUPLO", devices: ["Mini Duplo"], type: "mcb" },
-          { id: "S1-L-04", label: "PATTIE FREEZER", devices: ["Pattie Freezer"], type: "mcb" },
-          { id: "S1-L-05", label: "STORE KITCHEN SOCKETS", devices: ["Store Kitchen GPOs"], type: "mcb" },
-          { id: "S1-L-06", label: "HAND DRYERS 1 & 2", devices: ["Hand Dryers 1 & 2"], type: "mcb" },
-          { id: "S1-L-07", label: "HAND DRYERS 3 & 4", devices: ["Hand Dryers 3 & 4"], type: "mcb" },
-          { id: "S1-L-08", label: "FRIES FRYER VAT 1", devices: ["Fries Fryer Vat 1"], type: "mcb" },
-          { id: "S1-L-09", label: "HAND DRYERS 5 & 6", devices: ["Hand Dryers 5 & 6"], type: "mcb" },
-          { id: "S1-L-10", label: "HAND DRYERS 7 & 8", devices: ["Hand Dryers 7 & 8"], type: "mcb" },
-          { id: "S1-L-11", label: "FRIES FRYER VAT 2", devices: ["Fries Fryer Vat 2"], type: "mcb" },
-          { id: "S1-L-12", label: "FRIES FRYER VAT 3", devices: ["Fries Fryer Vat 3"], type: "mcb" },
-          { id: "S1-L-13", label: "TOASTER 1–4", devices: ["Toasters 1–4"], type: "mcb" },
-          { id: "S1-L-14", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
-          { id: "S1-L-15", label: "CLAM SHELL GRILL 1", devices: ["Clam Shell Grill 1"], type: "mcb" }
-        ],
-        right: [
-          { id: "S1-R-01", label: "FILET FREEZER", devices: ["Filet Freezer"], type: "mcb" },
-          { id: "S1-R-02", label: "GPO 1", devices: ["GPO 1"], type: "mcb" },
-          { id: "S1-R-03", label: "FRYFILET ACCESSORIES", devices: ["Fryfilet Accessories"], type: "mcb" },
-          { id: "S1-R-04", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
-          { id: "S1-R-05", label: "POS SYSTEM", devices: ["POS System"], type: "mcb" },
-          { id: "S1-R-06", label: "INSECT MACHINE", devices: ["Insect Machine"], type: "mcb" },
-          { id: "S1-R-07", label: "REFRIGERATOR", devices: ["Refrigerator"], type: "mcb" },
-          { id: "S1-R-08", label: "FILET FRYER VAT 1 & 2", devices: ["Filet Fryer Vat 1 & 2"], type: "mcb" },
-          { id: "S1-R-09", label: "3-PHASE OUTLET", devices: ["3-Phase Outlet"], type: "mcb" },
-          { id: "S1-R-10", label: "CLAM SHELL GRILL 2", devices: ["Clam Shell Grill 2"], type: "mcb" }
-        ]
+        // module map for 1–48
+        modules: {
+          // 1–24 left, 25–48 right
+          1:  { id: "S1-01", label: "BOTTOM MUFF TOAST", devices: ["Bottom Muffin Toaster"], type: "mcb" },
+          2:  { id: "S1-02", label: "TOP MUFF TOAST", devices: ["Top Muffin Toaster"], type: "mcb" },
+          3:  { id: "S1-03", label: "MINI DUPLO", devices: ["Mini Duplo"], type: "mcb" },
+          4:  { id: "S1-04", label: "PATTIE FREEZER", devices: ["Pattie Freezer"], type: "mcb" },
+          5:  { id: "S1-05", label: "STORE KITCHEN SOCKETS", devices: ["Store Kitchen GPOs"], type: "mcb" },
+          6:  { id: "S1-06", label: "HAND DRYERS 1 & 2", devices: ["Hand Dryers 1 & 2"], type: "mcb" },
+          7:  { id: "S1-07", label: "HAND DRYERS 3 & 4", devices: ["Hand Dryers 3 & 4"], type: "mcb" },
+          8:  { id: "S1-08", label: "FRIES FRYER VAT 1", devices: ["Fries Fryer Vat 1"], type: "mcb" },
+
+          // 9–12: 4‑wide 3‑phase with safety module
+          9:  { id: "S1-09", label: "FRIES FRYER VAT 2", devices: ["Fries Fryer Vat 2"], type: "3p-rcd", span: 4 },
+
+          13: { id: "S1-13", label: "FRIES FRYER VAT 3", devices: ["Fries Fryer Vat 3"], type: "mcb" },
+          14: { id: "S1-14", label: "TOASTER 1–4", devices: ["Toasters 1–4"], type: "mcb" },
+
+          // 15–18: 4‑wide 3‑phase with safety module
+          15: { id: "S1-15", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "3p-rcd", span: 4 },
+
+          19: { id: "S1-BL-19", label: "BLANK", type: "blank" },
+          20: { id: "S1-20", label: "CLAM SHELL GRILL 1", devices: ["Clam Shell Grill 1"], type: "mcb" },
+
+          // 21–24: 4‑wide 3‑phase with safety module
+          21: { id: "S1-21", label: "CLAM SHELL GRILL 2", devices: ["Clam Shell Grill 2"], type: "3p-rcd", span: 4 },
+
+          // RIGHT COLUMN 25–48
+          25: { id: "S1-25", label: "FILET FREEZER", devices: ["Filet Freezer"], type: "mcb" },
+          26: { id: "S1-26", label: "GPO 1", devices: ["GPO 1"], type: "mcb" },
+          27: { id: "S1-27", label: "FRYFILET ACCESSORIES", devices: ["Fryfilet Accessories"], type: "mcb" },
+
+          // 28–30: 3‑wide 3‑phase (no extra module)
+          28: { id: "S1-28", label: "3-PHASE OUTLET", devices: ["3-Phase Outlet"], type: "3p", span: 3 },
+
+          31: { id: "S1-31", label: "POS SYSTEM", devices: ["POS System"], type: "mcb" },
+          32: { id: "S1-BL-32", label: "BLANK", type: "blank" },
+
+          // 33–36: 4‑wide 3‑phase with safety module
+          33: { id: "S1-33", label: "INSECT MACHINE", devices: ["Insect Machine"], type: "3p-rcd", span: 4 },
+
+          37: { id: "S1-37", label: "REFRIGERATOR", devices: ["Refrigerator"], type: "mcb" },
+          38: { id: "S1-38", label: "FILET FRYER VAT 1 & 2", devices: ["Filet Fryer Vat 1 & 2"], type: "mcb" },
+
+          // 39–42: 4‑wide 3‑phase with safety module
+          39: { id: "S1-39", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "3p-rcd", span: 4 },
+
+          43: { id: "S1-BL-43", label: "BLANK", type: "blank" },
+          44: { id: "S1-BL-44", label: "BLANK", type: "blank" },
+
+          // 45–48: 4‑wide 3‑phase with safety module
+          45: { id: "S1-45", label: "SPARE 3P", devices: ["Spare 3-Phase"], type: "3p-rcd", span: 4 }
+        }
       },
       {
         id: "S2",
@@ -715,12 +743,31 @@
     return columnSide === "left" ? "left" : "right";
   }
 
-  function buildColumnSlots(section, side) {
-    const list = side === "left" ? section.left : section.right;
-    const maxSlots = section.maxSlotsPerColumn || list.length;
+  function buildColumnSlotsSection1(section, side) {
+    const max = section.maxSlotsPerColumn;
+    const slots = [];
+    const start = side === "left" ? 1 : 25;
+    const end = side === "left" ? 24 : 48;
+
+    let i = start;
+    while (i <= end) {
+      const mod = section.modules[i];
+      if (!mod) {
+        slots.push({ slotNumber: i, module: { type: "blank", id: `S1-BL-${i}`, label: "BLANK" } });
+        i++;
+        continue;
+      }
+      const span = mod.span || 1;
+      slots.push({ slotNumber: i, module: mod });
+      i += span;
+    }
+    return slots;
+  }
+
+  function buildColumnSlotsGeneric(list, maxSlots) {
     const slots = [];
     for (let i = 0; i < maxSlots; i++) {
-      slots.push(list[i] || null); // null = blank
+      slots.push({ slotNumber: i + 1, module: list[i] || null });
     }
     return slots;
   }
@@ -750,46 +797,59 @@
 
       const leftSlotsEl = document.createElement("div");
       leftSlotsEl.className = "slots";
-      const leftSlots = buildColumnSlots(section, "left");
-      leftSlots.forEach((b, idx) => {
+
+      let leftSlots;
+      if (section.id === "S1") {
+        leftSlots = buildColumnSlotsSection1(section, "left");
+      } else {
+        leftSlots = buildColumnSlotsGeneric(section.left || [], (section.left || []).length);
+      }
+
+      leftSlots.forEach(entry => {
+        const { slotNumber, module } = entry;
         const slotEl = document.createElement("div");
         slotEl.className = "slot";
 
         const num = document.createElement("div");
         num.className = "slot-number";
-
         if (section.id === "S1") {
-          num.textContent = String(idx + 1).padStart(2, "0"); // 1–24
+          num.textContent = String(slotNumber).padStart(2, "0");
         } else {
-          num.textContent = String(idx + 1).padStart(2, "0");
+          num.textContent = String(slotNumber).padStart(2, "0");
         }
-
         slotEl.appendChild(num);
 
-        if (!b) {
+        if (!module || module.type === "blank") {
           const blank = document.createElement("div");
           blank.className = "breaker blank";
-          leftSlotsEl.appendChild(slotEl);
           slotEl.appendChild(blank);
+          leftSlotsEl.appendChild(slotEl);
           return;
         }
 
         const breakerEl = document.createElement("div");
         breakerEl.className = "breaker";
-        breakerEl.dataset.breakerId = b.id;
+        breakerEl.dataset.breakerId = module.id;
         breakerEl.dataset.sectionId = section.id;
         breakerEl.dataset.columnSide = "left";
 
         const bodyInner = document.createElement("div");
         bodyInner.className = "breaker-body-inner";
-        if (b.type === "rcd") bodyInner.classList.add("breaker-rcd");
+
+        if (module.type === "rcd") {
+          bodyInner.classList.add("breaker-rcd");
+        } else if (module.type === "3p") {
+          bodyInner.classList.add("breaker-3p");
+        } else if (module.type === "3p-rcd") {
+          bodyInner.classList.add("breaker-3p-rcd");
+        }
 
         const rocker = document.createElement("div");
         rocker.className = "rocker";
         rocker.dataset.pos = rockerPosForState(section, "left", "on");
         bodyInner.appendChild(rocker);
 
-        if (b.type === "rcd") {
+        if (module.type === "rcd" || module.type === "3p-rcd") {
           const indicator = document.createElement("div");
           indicator.className = "indicator";
           const testBtn = document.createElement("div");
@@ -800,16 +860,17 @@
 
         const label = document.createElement("div");
         label.className = "breaker-label";
-        label.textContent = b.label;
+        label.textContent = module.label;
 
         breakerEl.appendChild(bodyInner);
         breakerEl.appendChild(label);
 
-        breakerEl.addEventListener("click", () => onBreakerClick(b.id));
+        breakerEl.addEventListener("click", () => onBreakerClick(module.id));
 
         slotEl.appendChild(breakerEl);
         leftSlotsEl.appendChild(slotEl);
       });
+
       leftCol.appendChild(leftSlotsEl);
 
       // RIGHT COLUMN
@@ -822,46 +883,59 @@
 
       const rightSlotsEl = document.createElement("div");
       rightSlotsEl.className = "slots";
-      const rightSlots = buildColumnSlots(section, "right");
-      rightSlots.forEach((b, idx) => {
+
+      let rightSlots;
+      if (section.id === "S1") {
+        rightSlots = buildColumnSlotsSection1(section, "right");
+      } else {
+        rightSlots = buildColumnSlotsGeneric(section.right || [], (section.right || []).length);
+      }
+
+      rightSlots.forEach(entry => {
+        const { slotNumber, module } = entry;
         const slotEl = document.createElement("div");
         slotEl.className = "slot";
 
         const num = document.createElement("div");
         num.className = "slot-number";
-
         if (section.id === "S1") {
-          num.textContent = String(24 + idx + 1).padStart(2, "0"); // 25–48
+          num.textContent = String(slotNumber).padStart(2, "0");
         } else {
-          num.textContent = String(idx + 1).padStart(2, "0");
+          num.textContent = String(slotNumber).padStart(2, "0");
         }
-
         slotEl.appendChild(num);
 
-        if (!b) {
+        if (!module || module.type === "blank") {
           const blank = document.createElement("div");
           blank.className = "breaker blank";
-          rightSlotsEl.appendChild(slotEl);
           slotEl.appendChild(blank);
+          rightSlotsEl.appendChild(slotEl);
           return;
         }
 
         const breakerEl = document.createElement("div");
         breakerEl.className = "breaker";
-        breakerEl.dataset.breakerId = b.id;
+        breakerEl.dataset.breakerId = module.id;
         breakerEl.dataset.sectionId = section.id;
         breakerEl.dataset.columnSide = "right";
 
         const bodyInner = document.createElement("div");
         bodyInner.className = "breaker-body-inner";
-        if (b.type === "rcd") bodyInner.classList.add("breaker-rcd");
+
+        if (module.type === "rcd") {
+          bodyInner.classList.add("breaker-rcd");
+        } else if (module.type === "3p") {
+          bodyInner.classList.add("breaker-3p");
+        } else if (module.type === "3p-rcd") {
+          bodyInner.classList.add("breaker-3p-rcd");
+        }
 
         const rocker = document.createElement("div");
         rocker.className = "rocker";
         rocker.dataset.pos = rockerPosForState(section, "right", "on");
         bodyInner.appendChild(rocker);
 
-        if (b.type === "rcd") {
+        if (module.type === "rcd" || module.type === "3p-rcd") {
           const indicator = document.createElement("div");
           indicator.className = "indicator";
           const testBtn = document.createElement("div");
@@ -872,16 +946,17 @@
 
         const label = document.createElement("div");
         label.className = "breaker-label";
-        label.textContent = b.label;
+        label.textContent = module.label;
 
         breakerEl.appendChild(bodyInner);
         breakerEl.appendChild(label);
 
-        breakerEl.addEventListener("click", () => onBreakerClick(b.id));
+        breakerEl.addEventListener("click", () => onBreakerClick(module.id));
 
         slotEl.appendChild(breakerEl);
         rightSlotsEl.appendChild(slotEl);
       });
+
       rightCol.appendChild(rightSlotsEl);
 
       columnsEl.appendChild(leftCol);
@@ -892,9 +967,18 @@
   }
 
   function findBreakerById(id) {
+    const s1 = SWITCHBOARD_DATA.sections.find(s => s.id === "S1");
+    if (s1 && s1.modules) {
+      for (const key in s1.modules) {
+        if (s1.modules[key].id === id) {
+          return { breaker: s1.modules[key], section: s1, columnSide: parseInt(key, 10) <= 24 ? "left" : "right" };
+        }
+      }
+    }
     for (const section of SWITCHBOARD_DATA.sections) {
-      for (const b of section.left) if (b.id === id) return { breaker: b, section, columnSide: "left" };
-      for (const b of section.right) if (b.id === id) return { breaker: b, section, columnSide: "right" };
+      if (section.id === "S1") continue;
+      for (const b of section.left || []) if (b.id === id) return { breaker: b, section, columnSide: "left" };
+      for (const b of section.right || []) if (b.id === id) return { breaker: b, section, columnSide: "right" };
     }
     return null;
   }
@@ -976,12 +1060,19 @@
       )
       .join("");
 
+    const typeLabel =
+      breaker.type === "3p"
+        ? "3‑PHASE"
+        : breaker.type === "3p-rcd"
+        ? "3‑PHASE + SAFETY"
+        : breaker.type.toUpperCase();
+
     detailsContent.innerHTML = `
       <div class="details-main-label">${breaker.label}</div>
       <div class="details-meta">
         <span class="pill">ID · ${breaker.id}</span>
         <span class="pill">SECTION · ${section.label}</span>
-        <span class="pill">TYPE · ${breaker.type.toUpperCase()}</span>
+        <span class="pill">TYPE · ${typeLabel}</span>
       </div>
       <div class="devices-list">
         ${
@@ -1003,8 +1094,23 @@
       return;
     }
 
+    const s1 = SWITCHBOARD_DATA.sections.find(s => s.id === "S1");
+    if (s1 && s1.modules) {
+      Object.values(s1.modules).forEach(b => {
+        const labelMatch = (b.label || "").toLowerCase().includes(q);
+        const deviceMatch = (b.devices || []).some(d =>
+          d.toLowerCase().includes(q)
+        );
+        if (labelMatch || deviceMatch) {
+          const el = document.querySelector(`.breaker[data-breaker-id="${b.id}"]`);
+          if (el) el.classList.add("highlight");
+        }
+      });
+    }
+
     SWITCHBOARD_DATA.sections.forEach(section => {
-      [...section.left, ...section.right].forEach(b => {
+      if (section.id === "S1") return;
+      [...(section.left || []), ...(section.right || [])].forEach(b => {
         const labelMatch = (b.label || "").toLowerCase().includes(q);
         const deviceMatch = (b.devices || []).some(d =>
           d.toLowerCase().includes(q)
