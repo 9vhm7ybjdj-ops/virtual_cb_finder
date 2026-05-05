@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -201,15 +201,15 @@
   }
 
   .section-panel {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 340px;
+    max-width: 340px;
     border-radius: 8px;
     border: 1px solid #4b5563;
     background: #e5e7eb;
     padding: 6px 6px 8px;
     position: relative;
     flex-shrink: 0;
-    overflow: hidden; /* keep right column inside tile */
+    overflow: hidden;
   }
 
   @media (max-width: 950px) {
@@ -231,7 +231,7 @@
   .section-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2px; /* tighter spacing */
+    gap: 4px;
   }
 
   .column {
@@ -252,7 +252,7 @@
 
   .slots {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column; /* 1 at top */
     gap: 2px;
   }
 
@@ -263,7 +263,7 @@
   }
 
   .slot-number {
-    width: 18px;
+    width: 22px;
     font-size: 8px;
     color: #4b5563;
     text-align: right;
@@ -286,8 +286,15 @@
     gap: 3px;
   }
 
+  .breaker.blank {
+    background: #9ca3af;
+    border-style: dashed;
+    cursor: default;
+    box-shadow: none;
+  }
+
   .breaker-body-inner {
-    flex: 0 0 18px;
+    flex: 0 0 20px;
     height: 12px;
     border-radius: 2px;
     background: #020617;
@@ -568,34 +575,35 @@
         id: "S1",
         label: "SECTION 1",
         tripStyle: "center",
+        maxSlotsPerColumn: 24,
         left: [
-          { slot: 1,  id: "S1-L-01", label: "BOTTOM MUFF TOAST", devices: ["Bottom Muffin Toaster"], type: "mcb" },
-          { slot: 2,  id: "S1-L-02", label: "TOP MUFF TOAST", devices: ["Top Muffin Toaster"], type: "mcb" },
-          { slot: 3,  id: "S1-L-03", label: "MINI DUPLO", devices: ["Mini Duplo"], type: "mcb" },
-          { slot: 4,  id: "S1-L-04", label: "PATTIE FREEZER", devices: ["Pattie Freezer"], type: "mcb" },
-          { slot: 5,  id: "S1-L-05", label: "STORE KITCHEN SOCKETS", devices: ["Store Kitchen GPOs"], type: "mcb" },
-          { slot: 6,  id: "S1-L-06", label: "HAND DRYERS 1 & 2", devices: ["Hand Dryers 1 & 2"], type: "mcb" },
-          { slot: 7,  id: "S1-L-07", label: "HAND DRYERS 3 & 4", devices: ["Hand Dryers 3 & 4"], type: "mcb" },
-          { slot: 8,  id: "S1-L-08", label: "FRIES FRYER VAT 1", devices: ["Fries Fryer Vat 1"], type: "mcb" },
-          { slot: 9,  id: "S1-L-09", label: "HAND DRYERS 5 & 6", devices: ["Hand Dryers 5 & 6"], type: "mcb" },
-          { slot: 10, id: "S1-L-10", label: "HAND DRYERS 7 & 8", devices: ["Hand Dryers 7 & 8"], type: "mcb" },
-          { slot: 11, id: "S1-L-11", label: "FRIES FRYER VAT 2", devices: ["Fries Fryer Vat 2"], type: "mcb" },
-          { slot: 12, id: "S1-L-12", label: "FRIES FRYER VAT 3", devices: ["Fries Fryer Vat 3"], type: "mcb" },
-          { slot: 13, id: "S1-L-13", label: "TOASTER 1–4", devices: ["Toasters 1–4"], type: "mcb" },
-          { slot: 14, id: "S1-L-14", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
-          { slot: 15, id: "S1-L-15", label: "CLAM SHELL GRILL 1", devices: ["Clam Shell Grill 1"], type: "mcb" }
+          { id: "S1-L-01", label: "BOTTOM MUFF TOAST", devices: ["Bottom Muffin Toaster"], type: "mcb" },
+          { id: "S1-L-02", label: "TOP MUFF TOAST", devices: ["Top Muffin Toaster"], type: "mcb" },
+          { id: "S1-L-03", label: "MINI DUPLO", devices: ["Mini Duplo"], type: "mcb" },
+          { id: "S1-L-04", label: "PATTIE FREEZER", devices: ["Pattie Freezer"], type: "mcb" },
+          { id: "S1-L-05", label: "STORE KITCHEN SOCKETS", devices: ["Store Kitchen GPOs"], type: "mcb" },
+          { id: "S1-L-06", label: "HAND DRYERS 1 & 2", devices: ["Hand Dryers 1 & 2"], type: "mcb" },
+          { id: "S1-L-07", label: "HAND DRYERS 3 & 4", devices: ["Hand Dryers 3 & 4"], type: "mcb" },
+          { id: "S1-L-08", label: "FRIES FRYER VAT 1", devices: ["Fries Fryer Vat 1"], type: "mcb" },
+          { id: "S1-L-09", label: "HAND DRYERS 5 & 6", devices: ["Hand Dryers 5 & 6"], type: "mcb" },
+          { id: "S1-L-10", label: "HAND DRYERS 7 & 8", devices: ["Hand Dryers 7 & 8"], type: "mcb" },
+          { id: "S1-L-11", label: "FRIES FRYER VAT 2", devices: ["Fries Fryer Vat 2"], type: "mcb" },
+          { id: "S1-L-12", label: "FRIES FRYER VAT 3", devices: ["Fries Fryer Vat 3"], type: "mcb" },
+          { id: "S1-L-13", label: "TOASTER 1–4", devices: ["Toasters 1–4"], type: "mcb" },
+          { id: "S1-L-14", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
+          { id: "S1-L-15", label: "CLAM SHELL GRILL 1", devices: ["Clam Shell Grill 1"], type: "mcb" }
         ],
         right: [
-          { slot: 1,  id: "S1-R-01", label: "FILET FREEZER", devices: ["Filet Freezer"], type: "mcb" },
-          { slot: 2,  id: "S1-R-02", label: "GPO 1", devices: ["GPO 1"], type: "mcb" },
-          { slot: 3,  id: "S1-R-03", label: "FRYFILET ACCESSORIES", devices: ["Fryfilet Accessories"], type: "mcb" },
-          { slot: 4,  id: "S1-R-04", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
-          { slot: 5,  id: "S1-R-05", label: "POS SYSTEM", devices: ["POS System"], type: "mcb" },
-          { slot: 6,  id: "S1-R-06", label: "INSECT MACHINE", devices: ["Insect Machine"], type: "mcb" },
-          { slot: 7,  id: "S1-R-07", label: "REFRIGERATOR", devices: ["Refrigerator"], type: "mcb" },
-          { slot: 8,  id: "S1-R-08", label: "FILET FRYER VAT 1 & 2", devices: ["Filet Fryer Vat 1 & 2"], type: "mcb" },
-          { slot: 9,  id: "S1-R-09", label: "3-PHASE OUTLET", devices: ["3-Phase Outlet"], type: "mcb" },
-          { slot: 10, id: "S1-R-10", label: "CLAM SHELL GRILL 2", devices: ["Clam Shell Grill 2"], type: "mcb" }
+          { id: "S1-R-01", label: "FILET FREEZER", devices: ["Filet Freezer"], type: "mcb" },
+          { id: "S1-R-02", label: "GPO 1", devices: ["GPO 1"], type: "mcb" },
+          { id: "S1-R-03", label: "FRYFILET ACCESSORIES", devices: ["Fryfilet Accessories"], type: "mcb" },
+          { id: "S1-R-04", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
+          { id: "S1-R-05", label: "POS SYSTEM", devices: ["POS System"], type: "mcb" },
+          { id: "S1-R-06", label: "INSECT MACHINE", devices: ["Insect Machine"], type: "mcb" },
+          { id: "S1-R-07", label: "REFRIGERATOR", devices: ["Refrigerator"], type: "mcb" },
+          { id: "S1-R-08", label: "FILET FRYER VAT 1 & 2", devices: ["Filet Fryer Vat 1 & 2"], type: "mcb" },
+          { id: "S1-R-09", label: "3-PHASE OUTLET", devices: ["3-Phase Outlet"], type: "mcb" },
+          { id: "S1-R-10", label: "CLAM SHELL GRILL 2", devices: ["Clam Shell Grill 2"], type: "mcb" }
         ]
       },
       {
@@ -603,33 +611,33 @@
         label: "SECTION 2",
         tripStyle: "center",
         left: [
-          { slot: 1, id: "S2-L-01", label: "KITCHEN LIGHTS A & B", devices: ["Kitchen Lights A & B"], type: "mcb" },
-          { slot: 2, id: "S2-L-02", label: "DINING LIGHTS A & B", devices: ["Dining Lights A & B"], type: "mcb" },
-          { slot: 3, id: "S2-L-03", label: "EAVE LIGHTS", devices: ["Eave Lights"], type: "mcb" },
-          { slot: 4, id: "S2-L-04", label: "EXTERNAL SIGNS", devices: ["External Signs"], type: "mcb" },
-          { slot: 5, id: "S2-L-05", label: "SALES LIGHTS", devices: ["Sales Lights"], type: "mcb" },
-          { slot: 6, id: "S2-L-06", label: "REAR AREA LIGHTS", devices: ["Rear Area Lights"], type: "mcb" },
-          { slot: 7, id: "S2-L-07", label: "PERGOLA PLAYLAND", devices: ["Pergola Playland"], type: "mcb" },
-          { slot: 8, id: "S2-L-08", label: "PYLON SIGN", devices: ["Pylon Sign"], type: "mcb" },
-          { slot: 9, id: "S2-L-09", label: "TOILET LIGHTS / EMG", devices: ["Toilet Lights A & B", "Emergency Lights"], type: "rcd" },
-          { slot: 10, id: "S2-L-10", label: "DECOR / ROOF SIGNS", devices: ["Decor Lights", "Roof Signs A–C"], type: "mcb" },
-          { slot: 11, id: "S2-L-11", label: "MEETING ROOM", devices: ["Meeting Room Lights"], type: "mcb" },
-          { slot: 12, id: "S2-L-12", label: "McCAFÉ DECOR LTS", devices: ["McCafé Decor Lights"], type: "mcb" },
-          { slot: 13, id: "S2-L-13", label: "SECURITY LIGHTS", devices: ["Security Lights"], type: "mcb" },
-          { slot: 14, id: "S2-L-14", label: "McCAFÉ SYSTEM", devices: ["McCafé System"], type: "mcb" },
-          { slot: 15, id: "S2-L-15", label: "ICE MACHINE", devices: ["Ice Machine"], type: "mcb" }
+          { id: "S2-L-01", label: "KITCHEN LIGHTS A & B", devices: ["Kitchen Lights A & B"], type: "mcb" },
+          { id: "S2-L-02", label: "DINING LIGHTS A & B", devices: ["Dining Lights A & B"], type: "mcb" },
+          { id: "S2-L-03", label: "EAVE LIGHTS", devices: ["Eave Lights"], type: "mcb" },
+          { id: "S2-L-04", label: "EXTERNAL SIGNS", devices: ["External Signs"], type: "mcb" },
+          { id: "S2-L-05", label: "SALES LIGHTS", devices: ["Sales Lights"], type: "mcb" },
+          { id: "S2-L-06", label: "REAR AREA LIGHTS", devices: ["Rear Area Lights"], type: "mcb" },
+          { id: "S2-L-07", label: "PERGOLA PLAYLAND", devices: ["Pergola Playland"], type: "mcb" },
+          { id: "S2-L-08", label: "PYLON SIGN", devices: ["Pylon Sign"], type: "mcb" },
+          { id: "S2-L-09", label: "TOILET LIGHTS / EMG", devices: ["Toilet Lights A & B", "Emergency Lights"], type: "rcd" },
+          { id: "S2-L-10", label: "DECOR / ROOF SIGNS", devices: ["Decor Lights", "Roof Signs A–C"], type: "mcb" },
+          { id: "S2-L-11", label: "MEETING ROOM", devices: ["Meeting Room Lights"], type: "mcb" },
+          { id: "S2-L-12", label: "McCAFÉ DECOR LTS", devices: ["McCafé Decor Lights"], type: "mcb" },
+          { id: "S2-L-13", label: "SECURITY LIGHTS", devices: ["Security Lights"], type: "mcb" },
+          { id: "S2-L-14", label: "McCAFÉ SYSTEM", devices: ["McCafé System"], type: "mcb" },
+          { id: "S2-L-15", label: "ICE MACHINE", devices: ["Ice Machine"], type: "mcb" }
         ],
         right: [
-          { slot: 1, id: "S2-R-01", label: "A/C CONTROL", devices: ["A/C Control"], type: "mcb" },
-          { slot: 2, id: "S2-R-02", label: "TOILET EXH FAN 5", devices: ["Toilet Exhaust Fan 5"], type: "mcb" },
-          { slot: 3, id: "S2-R-03", label: "GF CORRAL", devices: ["GF Corral"], type: "mcb" },
-          { slot: 4, id: "S2-R-04", label: "MAIN A/C CONTROL McCAFÉ", devices: ["Main A/C Control McCafé"], type: "mcb" },
-          { slot: 5, id: "S2-R-05", label: "A/C UNIT 3 PARTY", devices: ["A/C Unit 3 Party"], type: "mcb" },
-          { slot: 6, id: "S2-R-06", label: "A/C UNIT 2 DINING", devices: ["A/C Unit 2 Dining"], type: "mcb" },
-          { slot: 7, id: "S2-R-07", label: "A/C UNIT 1 KITCHEN", devices: ["A/C Unit 1 Kitchen"], type: "mcb" },
-          { slot: 8, id: "S2-R-08", label: "WASH-UP EXH FAN 4", devices: ["Wash-Up Exhaust Fan 4"], type: "mcb" },
-          { slot: 9, id: "S2-R-09", label: "TOILET EXH FAN 1", devices: ["Toilet Exhaust Fan 1"], type: "mcb" },
-          { slot: 10, id: "S2-R-10", label: "GRILL EXH FAN 3", devices: ["Grill Exhaust Fan 3"], type: "mcb" }
+          { id: "S2-R-01", label: "A/C CONTROL", devices: ["A/C Control"], type: "mcb" },
+          { id: "S2-R-02", label: "TOILET EXH FAN 5", devices: ["Toilet Exhaust Fan 5"], type: "mcb" },
+          { id: "S2-R-03", label: "GF CORRAL", devices: ["GF Corral"], type: "mcb" },
+          { id: "S2-R-04", label: "MAIN A/C CONTROL McCAFÉ", devices: ["Main A/C Control McCafé"], type: "mcb" },
+          { id: "S2-R-05", label: "A/C UNIT 3 PARTY", devices: ["A/C Unit 3 Party"], type: "mcb" },
+          { id: "S2-R-06", label: "A/C UNIT 2 DINING", devices: ["A/C Unit 2 Dining"], type: "mcb" },
+          { id: "S2-R-07", label: "A/C UNIT 1 KITCHEN", devices: ["A/C Unit 1 Kitchen"], type: "mcb" },
+          { id: "S2-R-08", label: "WASH-UP EXH FAN 4", devices: ["Wash-Up Exhaust Fan 4"], type: "mcb" },
+          { id: "S2-R-09", label: "TOILET EXH FAN 1", devices: ["Toilet Exhaust Fan 1"], type: "mcb" },
+          { id: "S2-R-10", label: "GRILL EXH FAN 3", devices: ["Grill Exhaust Fan 3"], type: "mcb" }
         ]
       },
       {
@@ -637,29 +645,29 @@
         label: "SECTION 3",
         tripStyle: "center",
         left: [
-          { slot: 1, id: "S3-L-01", label: "MAIN ISOLATOR", devices: ["Main Isolator"], type: "mcb" },
-          { slot: 2, id: "S3-L-02", label: "FRANKE FRIES BASKET", devices: ["Franke Fries Basket"], type: "mcb" },
-          { slot: 3, id: "S3-L-03", label: "BLENDED ICE", devices: ["Blended Ice"], type: "mcb" },
-          { slot: 4, id: "S3-L-04", label: "MARACHEL CYT RIGHT CHASE", devices: ["Marachel CYT Right Chase"], type: "mcb" },
-          { slot: 5, id: "S3-L-05", label: "CAPPUCCINO MACHINE", devices: ["Cappuccino Machine"], type: "mcb" },
-          { slot: 6, id: "S3-L-06", label: "FRONT COUNTER NO. 2", devices: ["Front Counter No. 2"], type: "mcb" },
-          { slot: 7, id: "S3-L-07", label: "15A GPO ABS ICE", devices: ["15A GPO ABS Ice"], type: "mcb" },
-          { slot: 8, id: "S3-L-08", label: "CARBINATOR", devices: ["Carbinator"], type: "mcb" },
-          { slot: 9, id: "S3-L-09", label: "FC POS 1", devices: ["Front Counter POS 1"], type: "mcb" },
-          { slot: 10, id: "S3-L-10", label: "HLZ 1", devices: ["HLZ 1"], type: "mcb" },
-          { slot: 11, id: "S3-L-11", label: "STEAMER FRONT CHASE", devices: ["Steamer Front Chase"], type: "mcb" }
+          { id: "S3-L-01", label: "MAIN ISOLATOR", devices: ["Main Isolator"], type: "mcb" },
+          { id: "S3-L-02", label: "FRANKE FRIES BASKET", devices: ["Franke Fries Basket"], type: "mcb" },
+          { id: "S3-L-03", label: "BLENDED ICE", devices: ["Blended Ice"], type: "mcb" },
+          { id: "S3-L-04", label: "MARACHEL CYT RIGHT CHASE", devices: ["Marachel CYT Right Chase"], type: "mcb" },
+          { id: "S3-L-05", label: "CAPPUCCINO MACHINE", devices: ["Cappuccino Machine"], type: "mcb" },
+          { id: "S3-L-06", label: "FRONT COUNTER NO. 2", devices: ["Front Counter No. 2"], type: "mcb" },
+          { id: "S3-L-07", label: "15A GPO ABS ICE", devices: ["15A GPO ABS Ice"], type: "mcb" },
+          { id: "S3-L-08", label: "CARBINATOR", devices: ["Carbinator"], type: "mcb" },
+          { id: "S3-L-09", label: "FC POS 1", devices: ["Front Counter POS 1"], type: "mcb" },
+          { id: "S3-L-10", label: "HLZ 1", devices: ["HLZ 1"], type: "mcb" },
+          { id: "S3-L-11", label: "STEAMER FRONT CHASE", devices: ["Steamer Front Chase"], type: "mcb" }
         ],
         right: [
-          { slot: 1, id: "S3-R-01", label: "BLK GPO ADJ TILL", devices: ["Black GPO Adjacent Till"], type: "mcb" },
-          { slot: 2, id: "S3-R-02", label: "HLZ / APP PIE", devices: ["HLZ / Apple Pie"], type: "mcb" },
-          { slot: 3, id: "S3-R-03", label: "TOASTER 9–12", devices: ["Toaster 9–12"], type: "mcb" },
-          { slot: 4, id: "S3-R-04", label: "DT SYSTEM OUTLETS", devices: ["Drive-Thru System Outlets"], type: "mcb" },
-          { slot: 5, id: "S3-R-05", label: "DISHWASHER", devices: ["Dishwasher"], type: "mcb" },
-          { slot: 6, id: "S3-R-06", label: "OUTLET 3 LEFT FCB", devices: ["Outlet 3 Left FCB"], type: "mcb" },
-          { slot: 7, id: "S3-R-07", label: "OUTLET 2 FROZEN COKE", devices: ["Outlet 2 Frozen Coke"], type: "mcb" },
-          { slot: 8, id: "S3-R-08", label: "VIPER FCB", devices: ["Viper FCB"], type: "mcb" },
-          { slot: 9, id: "S3-R-09", label: "SAFETY SW OUTLET 3", devices: ["Safety Switch Outlet 3"], type: "rcd" },
-          { slot: 10, id: "S3-R-10", label: "DISHWASHER RCD", devices: ["Dishwasher RCD"], type: "rcd" }
+          { id: "S3-R-01", label: "BLK GPO ADJ TILL", devices: ["Black GPO Adjacent Till"], type: "mcb" },
+          { id: "S3-R-02", label: "HLZ / APP PIE", devices: ["HLZ / Apple Pie"], type: "mcb" },
+          { id: "S3-R-03", label: "TOASTER 9–12", devices: ["Toaster 9–12"], type: "mcb" },
+          { id: "S3-R-04", label: "DT SYSTEM OUTLETS", devices: ["Drive-Thru System Outlets"], type: "mcb" },
+          { id: "S3-R-05", label: "DISHWASHER", devices: ["Dishwasher"], type: "mcb" },
+          { id: "S3-R-06", label: "OUTLET 3 LEFT FCB", devices: ["Outlet 3 Left FCB"], type: "mcb" },
+          { id: "S3-R-07", label: "OUTLET 2 FROZEN COKE", devices: ["Outlet 2 Frozen Coke"], type: "mcb" },
+          { id: "S3-R-08", label: "VIPER FCB", devices: ["Viper FCB"], type: "mcb" },
+          { id: "S3-R-09", label: "SAFETY SW OUTLET 3", devices: ["Safety Switch Outlet 3"], type: "rcd" },
+          { id: "S3-R-10", label: "DISHWASHER RCD", devices: ["Dishwasher RCD"], type: "rcd" }
         ]
       },
       {
@@ -667,18 +675,18 @@
         label: "SECTION 4",
         tripStyle: "off",
         left: [
-          { slot: 1, id: "S4-L-01", label: "LEFT COFFEE MAC", devices: ["Left Coffee Machine"], type: "mcb" },
-          { slot: 2, id: "S4-L-02", label: "CAPPUCCINO MACHINE 1", devices: ["Cappuccino Machine 1"], type: "mcb" },
-          { slot: 3, id: "S4-L-03", label: "RIGHT COFFEE MAC", devices: ["Right Coffee Machine"], type: "mcb" },
-          { slot: 4, id: "S4-L-04", label: "CAPPUCCINO MACHINE 2", devices: ["Cappuccino Machine 2"], type: "mcb" },
-          { slot: 5, id: "S4-L-05", label: "DRIVE-THRU CHARGE", devices: ["Drive-Thru Charge"], type: "mcb" },
-          { slot: 6, id: "S4-L-06", label: "UNDER COUNTER FRIDGES", devices: ["Under Counter Fridges"], type: "mcb" },
-          { slot: 7, id: "S4-L-07", label: "POWER UNDER FRONT COUNTER", devices: ["Power Under Front Counter"], type: "mcb" },
-          { slot: 8, id: "S4-L-08", label: "DRINK TOWER", devices: ["Drink Tower"], type: "mcb" },
-          { slot: 9, id: "S4-L-09", label: "DINING CHARGER POWER", devices: ["Dining Charger Power"], type: "mcb" }
+          { id: "S4-L-01", label: "LEFT COFFEE MAC", devices: ["Left Coffee Machine"], type: "mcb" },
+          { id: "S4-L-02", label: "CAPPUCCINO MACHINE 1", devices: ["Cappuccino Machine 1"], type: "mcb" },
+          { id: "S4-L-03", label: "RIGHT COFFEE MAC", devices: ["Right Coffee Machine"], type: "mcb" },
+          { id: "S4-L-04", label: "CAPPUCCINO MACHINE 2", devices: ["Cappuccino Machine 2"], type: "mcb" },
+          { id: "S4-L-05", label: "DRIVE-THRU CHARGE", devices: ["Drive-Thru Charge"], type: "mcb" },
+          { id: "S4-L-06", label: "UNDER COUNTER FRIDGES", devices: ["Under Counter Fridges"], type: "mcb" },
+          { id: "S4-L-07", label: "POWER UNDER FRONT COUNTER", devices: ["Power Under Front Counter"], type: "mcb" },
+          { id: "S4-L-08", label: "DRINK TOWER", devices: ["Drink Tower"], type: "mcb" },
+          { id: "S4-L-09", label: "DINING CHARGER POWER", devices: ["Dining Charger Power"], type: "mcb" }
         ],
         right: [
-          { slot: 1, id: "S4-R-01", label: "FILET FRYER 3", devices: ["Filet Fryer 3"], type: "mcb" }
+          { id: "S4-R-01", label: "FILET FRYER 3", devices: ["Filet Fryer 3"], type: "mcb" }
         ]
       }
     ]
@@ -707,6 +715,16 @@
     return columnSide === "left" ? "left" : "right";
   }
 
+  function buildColumnSlots(section, side) {
+    const list = side === "left" ? section.left : section.right;
+    const maxSlots = section.maxSlotsPerColumn || list.length;
+    const slots = [];
+    for (let i = 0; i < maxSlots; i++) {
+      slots.push(list[i] || null); // null = blank
+    }
+    return slots;
+  }
+
   function renderSections() {
     sectionsStrip.innerHTML = "";
     SWITCHBOARD_DATA.sections.forEach(section => {
@@ -722,6 +740,7 @@
       const columnsEl = document.createElement("div");
       columnsEl.className = "section-columns";
 
+      // LEFT COLUMN
       const leftCol = document.createElement("div");
       leftCol.className = "column";
       const leftLabel = document.createElement("div");
@@ -729,15 +748,31 @@
       leftLabel.textContent = "LEFT";
       leftCol.appendChild(leftLabel);
 
-      const leftSlots = document.createElement("div");
-      leftSlots.className = "slots";
-      section.left.forEach(b => {
+      const leftSlotsEl = document.createElement("div");
+      leftSlotsEl.className = "slots";
+      const leftSlots = buildColumnSlots(section, "left");
+      leftSlots.forEach((b, idx) => {
         const slotEl = document.createElement("div");
         slotEl.className = "slot";
 
         const num = document.createElement("div");
         num.className = "slot-number";
-        num.textContent = b.slot.toString().padStart(2, "0");
+
+        if (section.id === "S1") {
+          num.textContent = String(idx + 1).padStart(2, "0"); // 1–24
+        } else {
+          num.textContent = String(idx + 1).padStart(2, "0");
+        }
+
+        slotEl.appendChild(num);
+
+        if (!b) {
+          const blank = document.createElement("div");
+          blank.className = "breaker blank";
+          leftSlotsEl.appendChild(slotEl);
+          slotEl.appendChild(blank);
+          return;
+        }
 
         const breakerEl = document.createElement("div");
         breakerEl.className = "breaker";
@@ -772,12 +807,12 @@
 
         breakerEl.addEventListener("click", () => onBreakerClick(b.id));
 
-        slotEl.appendChild(num);
         slotEl.appendChild(breakerEl);
-        leftSlots.appendChild(slotEl);
+        leftSlotsEl.appendChild(slotEl);
       });
-      leftCol.appendChild(leftSlots);
+      leftCol.appendChild(leftSlotsEl);
 
+      // RIGHT COLUMN
       const rightCol = document.createElement("div");
       rightCol.className = "column";
       const rightLabel = document.createElement("div");
@@ -785,15 +820,31 @@
       rightLabel.textContent = "RIGHT";
       rightCol.appendChild(rightLabel);
 
-      const rightSlots = document.createElement("div");
-      rightSlots.className = "slots";
-      section.right.forEach(b => {
+      const rightSlotsEl = document.createElement("div");
+      rightSlotsEl.className = "slots";
+      const rightSlots = buildColumnSlots(section, "right");
+      rightSlots.forEach((b, idx) => {
         const slotEl = document.createElement("div");
         slotEl.className = "slot";
 
         const num = document.createElement("div");
         num.className = "slot-number";
-        num.textContent = b.slot.toString().padStart(2, "0");
+
+        if (section.id === "S1") {
+          num.textContent = String(24 + idx + 1).padStart(2, "0"); // 25–48
+        } else {
+          num.textContent = String(idx + 1).padStart(2, "0");
+        }
+
+        slotEl.appendChild(num);
+
+        if (!b) {
+          const blank = document.createElement("div");
+          blank.className = "breaker blank";
+          rightSlotsEl.appendChild(slotEl);
+          slotEl.appendChild(blank);
+          return;
+        }
 
         const breakerEl = document.createElement("div");
         breakerEl.className = "breaker";
@@ -828,11 +879,10 @@
 
         breakerEl.addEventListener("click", () => onBreakerClick(b.id));
 
-        slotEl.appendChild(num);
         slotEl.appendChild(breakerEl);
-        rightSlots.appendChild(slotEl);
+        rightSlotsEl.appendChild(slotEl);
       });
-      rightCol.appendChild(rightSlots);
+      rightCol.appendChild(rightSlotsEl);
 
       columnsEl.appendChild(leftCol);
       columnsEl.appendChild(rightCol);
@@ -853,7 +903,6 @@
     const found = findBreakerById(id);
     if (!found) return;
 
-    // Toggle selection: tap again to deselect
     if (selectedBreakerId === id) {
       selectedBreakerId = null;
       renderDetails(null, null);
@@ -880,6 +929,7 @@
 
   function updateFaultVisuals() {
     document.querySelectorAll(".breaker").forEach(el => {
+      if (el.classList.contains("blank")) return;
       const id = el.dataset.breakerId;
       const sectionId = el.dataset.sectionId;
       const columnSide = el.dataset.columnSide;
@@ -899,6 +949,7 @@
 
   function highlightSelectedBreaker() {
     document.querySelectorAll(".breaker").forEach(el => {
+      if (el.classList.contains("blank")) return;
       if (el.dataset.breakerId === selectedBreakerId) {
         el.classList.add("highlight");
       } else {
@@ -944,7 +995,7 @@
   function applySearchHighlight(query) {
     const q = query.toLowerCase();
     document.querySelectorAll(".breaker").forEach(el => {
-      el.classList.remove("highlight");
+      if (!el.classList.contains("blank")) el.classList.remove("highlight");
     });
 
     if (!q) {
