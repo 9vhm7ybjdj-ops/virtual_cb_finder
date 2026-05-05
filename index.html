@@ -1,1 +1,1000 @@
- 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Virtual Switchboard – Realistic Rockers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --bg: #0b0e13;
+    --panel-bg: #141922;
+    --panel-border: #2b3340;
+    --breaker-body: #111827;
+    --breaker-border: #4b5563;
+    --breaker-label: #e5e7eb;
+    --muted: #6b7280;
+    --accent: #00e5ff;
+    --fault: #f97373;
+    --highlight: #ffb84c;
+    --shadow-soft: 0 0 10px rgba(0, 0, 0, 0.7);
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+      "Segoe UI", sans-serif;
+  }
+
+  body {
+    margin: 0;
+    padding: 12px;
+    background: radial-gradient(circle at top, #1b2735 0, #05070b 60%, #020308 100%);
+    color: #e5e7eb;
+  }
+
+  .app-shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(280px, 1.4fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .app-shell {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .panel {
+    background: linear-gradient(145deg, #151921, #10131a);
+    border-radius: 12px;
+    border: 1px solid #262c36;
+    box-shadow: var(--shadow-soft);
+    padding: 12px 14px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(0, 229, 255, 0.08), transparent 55%);
+    pointer-events: none;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .panel-title {
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .panel-subtitle {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .badge {
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    padding: 2px 8px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .search-input {
+    flex: 1;
+    background: #05070b;
+    border-radius: 999px;
+    border: 1px solid #374151;
+    padding: 6px 10px;
+    color: #e5e7eb;
+    font-size: 12px;
+    outline: none;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.7);
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.4);
+  }
+
+  .btn {
+    border-radius: 999px;
+    border: 1px solid #374151;
+    background: radial-gradient(circle at top, #1f2933, #111827);
+    color: #e5e7eb;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    padding: 6px 9px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .btn span.icon {
+    font-size: 12px;
+  }
+
+  .btn-primary {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hint {
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .switchboard {
+    background: radial-gradient(circle at top, #1f2933 0, #05070b 60%);
+    border-radius: 10px;
+    border: 1px solid var(--panel-border);
+    padding: 8px;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .switchboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+
+  .switchboard-name {
+    color: #e5e7eb;
+  }
+
+  .switchboard-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #16c47f;
+    box-shadow: 0 0 8px rgba(22, 196, 127, 0.8);
+  }
+
+  .sections-strip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .section-panel {
+    min-width: 300px;
+    max-width: 300px;
+    border-radius: 8px;
+    border: 1px solid #4b5563;
+    background: #e5e7eb;
+    padding: 6px 6px 8px;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden; /* keep right column inside tile */
+  }
+
+  @media (max-width: 950px) {
+    .section-panel {
+      transform: scale(0.82);
+      transform-origin: top left;
+    }
+  }
+
+  .section-header {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #111827;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .section-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px; /* tighter spacing */
+  }
+
+  .column {
+    border-radius: 4px;
+    border: 1px solid #9ca3af;
+    padding: 3px 2px 3px;
+    background: #d1d5db;
+  }
+
+  .column-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #374151;
+    text-align: center;
+    margin-bottom: 3px;
+  }
+
+  .slots {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+  }
+
+  .slot {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .slot-number {
+    width: 18px;
+    font-size: 8px;
+    color: #4b5563;
+    text-align: right;
+  }
+
+  .breaker {
+    position: relative;
+    border-radius: 3px;
+    background: var(--breaker-body);
+    border: 1px solid var(--breaker-border);
+    padding: 2px 3px;
+    cursor: pointer;
+    transition: box-shadow 0.08s ease-out, border-color 0.08s ease-out,
+      transform 0.08s ease-out, background 0.08s ease-out;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+    flex: 1;
+    min-height: 14px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .breaker-body-inner {
+    flex: 0 0 18px;
+    height: 12px;
+    border-radius: 2px;
+    background: #020617;
+    border: 1px solid #4b5563;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .breaker-rcd .breaker-body-inner {
+    flex-basis: 26px;
+  }
+
+  .rocker {
+    width: 14px;
+    height: 6px;
+    border-radius: 2px;
+    background: #e5e7eb;
+    position: relative;
+    transition: transform 0.08s ease-out;
+  }
+
+  .rocker::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    border-top: 1px solid rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  }
+
+  .rocker::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .rocker[data-pos="left"] {
+    transform: translateX(-4px);
+  }
+
+  .rocker[data-pos="center"] {
+    transform: translateX(0);
+  }
+
+  .rocker[data-pos="right"] {
+    transform: translateX(4px);
+  }
+
+  .indicator {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: #22c55e;
+  }
+
+  .rcd-test {
+    position: absolute;
+    left: 2px;
+    bottom: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: #f97316;
+  }
+
+  .breaker-label {
+    font-size: 9px;
+    color: var(--breaker-label);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    margin-left: 2px;
+  }
+
+  .breaker.fault {
+    border-color: var(--fault);
+    box-shadow: 0 0 8px rgba(248, 113, 113, 0.8);
+  }
+
+  .breaker.fault .breaker-label {
+    color: var(--fault);
+  }
+
+  .breaker.highlight {
+    border-color: var(--highlight);
+    box-shadow: 0 0 10px rgba(255, 184, 76, 0.7);
+    transform: translateY(-1px);
+  }
+
+  .details-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .details-block {
+    border-radius: 8px;
+    border: 1px solid #27303d;
+    background: radial-gradient(circle at top, #111827 0, #020617 60%);
+    padding: 8px 9px 9px;
+  }
+
+  .details-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .details-main-label {
+    font-size: 13px;
+    color: #e5e7eb;
+    margin-bottom: 4px;
+  }
+
+  .details-meta {
+    font-size: 10px;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pill {
+    border-radius: 999px;
+    border: 1px solid #374151;
+    padding: 2px 7px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #9ca3af;
+  }
+
+  .devices-list {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  .device-item {
+    font-size: 11px;
+    color: #e5e7eb;
+    padding: 3px 6px;
+    border-radius: 6px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid #1f2937;
+  }
+
+  .device-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+
+  .mode-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .mode-pill {
+    border-radius: 999px;
+    border: 1px solid #374151;
+    padding: 2px 7px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #9ca3af;
+    cursor: pointer;
+  }
+
+  .mode-pill.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+  }
+
+  .no-selection {
+    font-size: 11px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Switchboard Visual</div>
+        <div class="panel-subtitle">4 sections · sideways scroll · real rockers</div>
+      </div>
+      <div class="badge">Normal · Static</div>
+    </div>
+
+    <div class="controls">
+      <div class="search-row">
+        <input
+          id="searchInput"
+          class="search-input"
+          type="text"
+          placeholder="Search device or breaker label"
+        />
+        <button class="btn btn-primary" id="clearSearchBtn">
+          <span class="icon">✕</span>
+          Clear
+        </button>
+      </div>
+      <div class="hint">
+        Type any circuit or equipment name — matching breakers glow amber. Swipe sideways to move between sections.
+      </div>
+    </div>
+
+    <div class="switchboard">
+      <div class="switchboard-header">
+        <div class="switchboard-name">SECONDARY SWITCHBOARD</div>
+        <div class="switchboard-status">
+          <div class="status-dot"></div>
+          <span id="modeStatusText">Normal · All ON</span>
+        </div>
+      </div>
+      <div class="sections-strip" id="sectionsStrip"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Breaker Details</div>
+        <div class="panel-subtitle">Selection · Equipment · Modes</div>
+      </div>
+      <div class="badge">Tactical HUD</div>
+    </div>
+
+    <div class="details-section">
+      <div class="details-block">
+        <div class="details-title">Selected breaker</div>
+        <div id="detailsContent">
+          <div class="no-selection">Tap a breaker to see its circuit and equipment.</div>
+        </div>
+      </div>
+
+      <div class="details-block">
+        <div class="details-title">Modes</div>
+        <div class="mode-row">
+          <div class="mode-pill active" data-mode="normal">Normal</div>
+          <div class="mode-pill" data-mode="fault">Fault Sim</div>
+        </div>
+        <div class="hint" style="margin-top:4px;">
+          Normal: all breakers locked ON (no switching).<br />
+          Fault Sim: tap a breaker to mark it faulted.<br />
+          Sections 1–3 trip to centre; Section 4 trips to OFF.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SWITCHBOARD_DATA = {
+    sections: [
+      {
+        id: "S1",
+        label: "SECTION 1",
+        tripStyle: "center",
+        left: [
+          { slot: 1,  id: "S1-L-01", label: "BOTTOM MUFF TOAST", devices: ["Bottom Muffin Toaster"], type: "mcb" },
+          { slot: 2,  id: "S1-L-02", label: "TOP MUFF TOAST", devices: ["Top Muffin Toaster"], type: "mcb" },
+          { slot: 3,  id: "S1-L-03", label: "MINI DUPLO", devices: ["Mini Duplo"], type: "mcb" },
+          { slot: 4,  id: "S1-L-04", label: "PATTIE FREEZER", devices: ["Pattie Freezer"], type: "mcb" },
+          { slot: 5,  id: "S1-L-05", label: "STORE KITCHEN SOCKETS", devices: ["Store Kitchen GPOs"], type: "mcb" },
+          { slot: 6,  id: "S1-L-06", label: "HAND DRYERS 1 & 2", devices: ["Hand Dryers 1 & 2"], type: "mcb" },
+          { slot: 7,  id: "S1-L-07", label: "HAND DRYERS 3 & 4", devices: ["Hand Dryers 3 & 4"], type: "mcb" },
+          { slot: 8,  id: "S1-L-08", label: "FRIES FRYER VAT 1", devices: ["Fries Fryer Vat 1"], type: "mcb" },
+          { slot: 9,  id: "S1-L-09", label: "HAND DRYERS 5 & 6", devices: ["Hand Dryers 5 & 6"], type: "mcb" },
+          { slot: 10, id: "S1-L-10", label: "HAND DRYERS 7 & 8", devices: ["Hand Dryers 7 & 8"], type: "mcb" },
+          { slot: 11, id: "S1-L-11", label: "FRIES FRYER VAT 2", devices: ["Fries Fryer Vat 2"], type: "mcb" },
+          { slot: 12, id: "S1-L-12", label: "FRIES FRYER VAT 3", devices: ["Fries Fryer Vat 3"], type: "mcb" },
+          { slot: 13, id: "S1-L-13", label: "TOASTER 1–4", devices: ["Toasters 1–4"], type: "mcb" },
+          { slot: 14, id: "S1-L-14", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
+          { slot: 15, id: "S1-L-15", label: "CLAM SHELL GRILL 1", devices: ["Clam Shell Grill 1"], type: "mcb" }
+        ],
+        right: [
+          { slot: 1,  id: "S1-R-01", label: "FILET FREEZER", devices: ["Filet Freezer"], type: "mcb" },
+          { slot: 2,  id: "S1-R-02", label: "GPO 1", devices: ["GPO 1"], type: "mcb" },
+          { slot: 3,  id: "S1-R-03", label: "FRYFILET ACCESSORIES", devices: ["Fryfilet Accessories"], type: "mcb" },
+          { slot: 4,  id: "S1-R-04", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "rcd" },
+          { slot: 5,  id: "S1-R-05", label: "POS SYSTEM", devices: ["POS System"], type: "mcb" },
+          { slot: 6,  id: "S1-R-06", label: "INSECT MACHINE", devices: ["Insect Machine"], type: "mcb" },
+          { slot: 7,  id: "S1-R-07", label: "REFRIGERATOR", devices: ["Refrigerator"], type: "mcb" },
+          { slot: 8,  id: "S1-R-08", label: "FILET FRYER VAT 1 & 2", devices: ["Filet Fryer Vat 1 & 2"], type: "mcb" },
+          { slot: 9,  id: "S1-R-09", label: "3-PHASE OUTLET", devices: ["3-Phase Outlet"], type: "mcb" },
+          { slot: 10, id: "S1-R-10", label: "CLAM SHELL GRILL 2", devices: ["Clam Shell Grill 2"], type: "mcb" }
+        ]
+      },
+      {
+        id: "S2",
+        label: "SECTION 2",
+        tripStyle: "center",
+        left: [
+          { slot: 1, id: "S2-L-01", label: "KITCHEN LIGHTS A & B", devices: ["Kitchen Lights A & B"], type: "mcb" },
+          { slot: 2, id: "S2-L-02", label: "DINING LIGHTS A & B", devices: ["Dining Lights A & B"], type: "mcb" },
+          { slot: 3, id: "S2-L-03", label: "EAVE LIGHTS", devices: ["Eave Lights"], type: "mcb" },
+          { slot: 4, id: "S2-L-04", label: "EXTERNAL SIGNS", devices: ["External Signs"], type: "mcb" },
+          { slot: 5, id: "S2-L-05", label: "SALES LIGHTS", devices: ["Sales Lights"], type: "mcb" },
+          { slot: 6, id: "S2-L-06", label: "REAR AREA LIGHTS", devices: ["Rear Area Lights"], type: "mcb" },
+          { slot: 7, id: "S2-L-07", label: "PERGOLA PLAYLAND", devices: ["Pergola Playland"], type: "mcb" },
+          { slot: 8, id: "S2-L-08", label: "PYLON SIGN", devices: ["Pylon Sign"], type: "mcb" },
+          { slot: 9, id: "S2-L-09", label: "TOILET LIGHTS / EMG", devices: ["Toilet Lights A & B", "Emergency Lights"], type: "rcd" },
+          { slot: 10, id: "S2-L-10", label: "DECOR / ROOF SIGNS", devices: ["Decor Lights", "Roof Signs A–C"], type: "mcb" },
+          { slot: 11, id: "S2-L-11", label: "MEETING ROOM", devices: ["Meeting Room Lights"], type: "mcb" },
+          { slot: 12, id: "S2-L-12", label: "McCAFÉ DECOR LTS", devices: ["McCafé Decor Lights"], type: "mcb" },
+          { slot: 13, id: "S2-L-13", label: "SECURITY LIGHTS", devices: ["Security Lights"], type: "mcb" },
+          { slot: 14, id: "S2-L-14", label: "McCAFÉ SYSTEM", devices: ["McCafé System"], type: "mcb" },
+          { slot: 15, id: "S2-L-15", label: "ICE MACHINE", devices: ["Ice Machine"], type: "mcb" }
+        ],
+        right: [
+          { slot: 1, id: "S2-R-01", label: "A/C CONTROL", devices: ["A/C Control"], type: "mcb" },
+          { slot: 2, id: "S2-R-02", label: "TOILET EXH FAN 5", devices: ["Toilet Exhaust Fan 5"], type: "mcb" },
+          { slot: 3, id: "S2-R-03", label: "GF CORRAL", devices: ["GF Corral"], type: "mcb" },
+          { slot: 4, id: "S2-R-04", label: "MAIN A/C CONTROL McCAFÉ", devices: ["Main A/C Control McCafé"], type: "mcb" },
+          { slot: 5, id: "S2-R-05", label: "A/C UNIT 3 PARTY", devices: ["A/C Unit 3 Party"], type: "mcb" },
+          { slot: 6, id: "S2-R-06", label: "A/C UNIT 2 DINING", devices: ["A/C Unit 2 Dining"], type: "mcb" },
+          { slot: 7, id: "S2-R-07", label: "A/C UNIT 1 KITCHEN", devices: ["A/C Unit 1 Kitchen"], type: "mcb" },
+          { slot: 8, id: "S2-R-08", label: "WASH-UP EXH FAN 4", devices: ["Wash-Up Exhaust Fan 4"], type: "mcb" },
+          { slot: 9, id: "S2-R-09", label: "TOILET EXH FAN 1", devices: ["Toilet Exhaust Fan 1"], type: "mcb" },
+          { slot: 10, id: "S2-R-10", label: "GRILL EXH FAN 3", devices: ["Grill Exhaust Fan 3"], type: "mcb" }
+        ]
+      },
+      {
+        id: "S3",
+        label: "SECTION 3",
+        tripStyle: "center",
+        left: [
+          { slot: 1, id: "S3-L-01", label: "MAIN ISOLATOR", devices: ["Main Isolator"], type: "mcb" },
+          { slot: 2, id: "S3-L-02", label: "FRANKE FRIES BASKET", devices: ["Franke Fries Basket"], type: "mcb" },
+          { slot: 3, id: "S3-L-03", label: "BLENDED ICE", devices: ["Blended Ice"], type: "mcb" },
+          { slot: 4, id: "S3-L-04", label: "MARACHEL CYT RIGHT CHASE", devices: ["Marachel CYT Right Chase"], type: "mcb" },
+          { slot: 5, id: "S3-L-05", label: "CAPPUCCINO MACHINE", devices: ["Cappuccino Machine"], type: "mcb" },
+          { slot: 6, id: "S3-L-06", label: "FRONT COUNTER NO. 2", devices: ["Front Counter No. 2"], type: "mcb" },
+          { slot: 7, id: "S3-L-07", label: "15A GPO ABS ICE", devices: ["15A GPO ABS Ice"], type: "mcb" },
+          { slot: 8, id: "S3-L-08", label: "CARBINATOR", devices: ["Carbinator"], type: "mcb" },
+          { slot: 9, id: "S3-L-09", label: "FC POS 1", devices: ["Front Counter POS 1"], type: "mcb" },
+          { slot: 10, id: "S3-L-10", label: "HLZ 1", devices: ["HLZ 1"], type: "mcb" },
+          { slot: 11, id: "S3-L-11", label: "STEAMER FRONT CHASE", devices: ["Steamer Front Chase"], type: "mcb" }
+        ],
+        right: [
+          { slot: 1, id: "S3-R-01", label: "BLK GPO ADJ TILL", devices: ["Black GPO Adjacent Till"], type: "mcb" },
+          { slot: 2, id: "S3-R-02", label: "HLZ / APP PIE", devices: ["HLZ / Apple Pie"], type: "mcb" },
+          { slot: 3, id: "S3-R-03", label: "TOASTER 9–12", devices: ["Toaster 9–12"], type: "mcb" },
+          { slot: 4, id: "S3-R-04", label: "DT SYSTEM OUTLETS", devices: ["Drive-Thru System Outlets"], type: "mcb" },
+          { slot: 5, id: "S3-R-05", label: "DISHWASHER", devices: ["Dishwasher"], type: "mcb" },
+          { slot: 6, id: "S3-R-06", label: "OUTLET 3 LEFT FCB", devices: ["Outlet 3 Left FCB"], type: "mcb" },
+          { slot: 7, id: "S3-R-07", label: "OUTLET 2 FROZEN COKE", devices: ["Outlet 2 Frozen Coke"], type: "mcb" },
+          { slot: 8, id: "S3-R-08", label: "VIPER FCB", devices: ["Viper FCB"], type: "mcb" },
+          { slot: 9, id: "S3-R-09", label: "SAFETY SW OUTLET 3", devices: ["Safety Switch Outlet 3"], type: "rcd" },
+          { slot: 10, id: "S3-R-10", label: "DISHWASHER RCD", devices: ["Dishwasher RCD"], type: "rcd" }
+        ]
+      },
+      {
+        id: "S4",
+        label: "SECTION 4",
+        tripStyle: "off",
+        left: [
+          { slot: 1, id: "S4-L-01", label: "LEFT COFFEE MAC", devices: ["Left Coffee Machine"], type: "mcb" },
+          { slot: 2, id: "S4-L-02", label: "CAPPUCCINO MACHINE 1", devices: ["Cappuccino Machine 1"], type: "mcb" },
+          { slot: 3, id: "S4-L-03", label: "RIGHT COFFEE MAC", devices: ["Right Coffee Machine"], type: "mcb" },
+          { slot: 4, id: "S4-L-04", label: "CAPPUCCINO MACHINE 2", devices: ["Cappuccino Machine 2"], type: "mcb" },
+          { slot: 5, id: "S4-L-05", label: "DRIVE-THRU CHARGE", devices: ["Drive-Thru Charge"], type: "mcb" },
+          { slot: 6, id: "S4-L-06", label: "UNDER COUNTER FRIDGES", devices: ["Under Counter Fridges"], type: "mcb" },
+          { slot: 7, id: "S4-L-07", label: "POWER UNDER FRONT COUNTER", devices: ["Power Under Front Counter"], type: "mcb" },
+          { slot: 8, id: "S4-L-08", label: "DRINK TOWER", devices: ["Drink Tower"], type: "mcb" },
+          { slot: 9, id: "S4-L-09", label: "DINING CHARGER POWER", devices: ["Dining Charger Power"], type: "mcb" }
+        ],
+        right: [
+          { slot: 1, id: "S4-R-01", label: "FILET FRYER 3", devices: ["Filet Fryer 3"], type: "mcb" }
+        ]
+      }
+    ]
+  };
+
+  const sectionsStrip = document.getElementById("sectionsStrip");
+  const detailsContent = document.getElementById("detailsContent");
+  const searchInput = document.getElementById("searchInput");
+  const clearSearchBtn = document.getElementById("clearSearchBtn");
+  const modeStatusText = document.getElementById("modeStatusText");
+  const modePills = document.querySelectorAll(".mode-pill");
+
+  let currentMode = "normal";
+  let selectedBreakerId = null;
+  const faultedBreakers = new Set();
+
+  function rockerPosForState(section, columnSide, state) {
+    const tripStyle = section.tripStyle || "center";
+    if (state === "on") {
+      return columnSide === "left" ? "right" : "left";
+    }
+    if (state === "fault") {
+      if (tripStyle === "center") return "center";
+      return columnSide === "left" ? "left" : "right";
+    }
+    return columnSide === "left" ? "left" : "right";
+  }
+
+  function renderSections() {
+    sectionsStrip.innerHTML = "";
+    SWITCHBOARD_DATA.sections.forEach(section => {
+      const sectionEl = document.createElement("div");
+      sectionEl.className = "section-panel";
+      sectionEl.dataset.sectionId = section.id;
+
+      const header = document.createElement("div");
+      header.className = "section-header";
+      header.textContent = section.label;
+      sectionEl.appendChild(header);
+
+      const columnsEl = document.createElement("div");
+      columnsEl.className = "section-columns";
+
+      const leftCol = document.createElement("div");
+      leftCol.className = "column";
+      const leftLabel = document.createElement("div");
+      leftLabel.className = "column-label";
+      leftLabel.textContent = "LEFT";
+      leftCol.appendChild(leftLabel);
+
+      const leftSlots = document.createElement("div");
+      leftSlots.className = "slots";
+      section.left.forEach(b => {
+        const slotEl = document.createElement("div");
+        slotEl.className = "slot";
+
+        const num = document.createElement("div");
+        num.className = "slot-number";
+        num.textContent = b.slot.toString().padStart(2, "0");
+
+        const breakerEl = document.createElement("div");
+        breakerEl.className = "breaker";
+        breakerEl.dataset.breakerId = b.id;
+        breakerEl.dataset.sectionId = section.id;
+        breakerEl.dataset.columnSide = "left";
+
+        const bodyInner = document.createElement("div");
+        bodyInner.className = "breaker-body-inner";
+        if (b.type === "rcd") bodyInner.classList.add("breaker-rcd");
+
+        const rocker = document.createElement("div");
+        rocker.className = "rocker";
+        rocker.dataset.pos = rockerPosForState(section, "left", "on");
+        bodyInner.appendChild(rocker);
+
+        if (b.type === "rcd") {
+          const indicator = document.createElement("div");
+          indicator.className = "indicator";
+          const testBtn = document.createElement("div");
+          testBtn.className = "rcd-test";
+          bodyInner.appendChild(indicator);
+          bodyInner.appendChild(testBtn);
+        }
+
+        const label = document.createElement("div");
+        label.className = "breaker-label";
+        label.textContent = b.label;
+
+        breakerEl.appendChild(bodyInner);
+        breakerEl.appendChild(label);
+
+        breakerEl.addEventListener("click", () => onBreakerClick(b.id));
+
+        slotEl.appendChild(num);
+        slotEl.appendChild(breakerEl);
+        leftSlots.appendChild(slotEl);
+      });
+      leftCol.appendChild(leftSlots);
+
+      const rightCol = document.createElement("div");
+      rightCol.className = "column";
+      const rightLabel = document.createElement("div");
+      rightLabel.className = "column-label";
+      rightLabel.textContent = "RIGHT";
+      rightCol.appendChild(rightLabel);
+
+      const rightSlots = document.createElement("div");
+      rightSlots.className = "slots";
+      section.right.forEach(b => {
+        const slotEl = document.createElement("div");
+        slotEl.className = "slot";
+
+        const num = document.createElement("div");
+        num.className = "slot-number";
+        num.textContent = b.slot.toString().padStart(2, "0");
+
+        const breakerEl = document.createElement("div");
+        breakerEl.className = "breaker";
+        breakerEl.dataset.breakerId = b.id;
+        breakerEl.dataset.sectionId = section.id;
+        breakerEl.dataset.columnSide = "right";
+
+        const bodyInner = document.createElement("div");
+        bodyInner.className = "breaker-body-inner";
+        if (b.type === "rcd") bodyInner.classList.add("breaker-rcd");
+
+        const rocker = document.createElement("div");
+        rocker.className = "rocker";
+        rocker.dataset.pos = rockerPosForState(section, "right", "on");
+        bodyInner.appendChild(rocker);
+
+        if (b.type === "rcd") {
+          const indicator = document.createElement("div");
+          indicator.className = "indicator";
+          const testBtn = document.createElement("div");
+          testBtn.className = "rcd-test";
+          bodyInner.appendChild(indicator);
+          bodyInner.appendChild(testBtn);
+        }
+
+        const label = document.createElement("div");
+        label.className = "breaker-label";
+        label.textContent = b.label;
+
+        breakerEl.appendChild(bodyInner);
+        breakerEl.appendChild(label);
+
+        breakerEl.addEventListener("click", () => onBreakerClick(b.id));
+
+        slotEl.appendChild(num);
+        slotEl.appendChild(breakerEl);
+        rightSlots.appendChild(slotEl);
+      });
+      rightCol.appendChild(rightSlots);
+
+      columnsEl.appendChild(leftCol);
+      columnsEl.appendChild(rightCol);
+      sectionEl.appendChild(columnsEl);
+      sectionsStrip.appendChild(sectionEl);
+    });
+  }
+
+  function findBreakerById(id) {
+    for (const section of SWITCHBOARD_DATA.sections) {
+      for (const b of section.left) if (b.id === id) return { breaker: b, section, columnSide: "left" };
+      for (const b of section.right) if (b.id === id) return { breaker: b, section, columnSide: "right" };
+    }
+    return null;
+  }
+
+  function onBreakerClick(id) {
+    const found = findBreakerById(id);
+    if (!found) return;
+
+    // Toggle selection: tap again to deselect
+    if (selectedBreakerId === id) {
+      selectedBreakerId = null;
+      renderDetails(null, null);
+      highlightSelectedBreaker();
+      applySearchHighlight(searchInput.value.trim());
+      return;
+    }
+
+    selectedBreakerId = id;
+
+    if (currentMode === "fault") {
+      if (faultedBreakers.has(id)) {
+        faultedBreakers.delete(id);
+      } else {
+        faultedBreakers.add(id);
+      }
+      updateFaultVisuals();
+    }
+
+    highlightSelectedBreaker();
+    renderDetails(found.breaker, found.section);
+    applySearchHighlight(searchInput.value.trim());
+  }
+
+  function updateFaultVisuals() {
+    document.querySelectorAll(".breaker").forEach(el => {
+      const id = el.dataset.breakerId;
+      const sectionId = el.dataset.sectionId;
+      const columnSide = el.dataset.columnSide;
+      const section = SWITCHBOARD_DATA.sections.find(s => s.id === sectionId);
+      const rocker = el.querySelector(".rocker");
+      if (!section || !rocker) return;
+
+      if (faultedBreakers.has(id) && currentMode === "fault") {
+        el.classList.add("fault");
+        rocker.dataset.pos = rockerPosForState(section, columnSide, "fault");
+      } else {
+        el.classList.remove("fault");
+        rocker.dataset.pos = rockerPosForState(section, columnSide, "on");
+      }
+    });
+  }
+
+  function highlightSelectedBreaker() {
+    document.querySelectorAll(".breaker").forEach(el => {
+      if (el.dataset.breakerId === selectedBreakerId) {
+        el.classList.add("highlight");
+      } else {
+        el.classList.remove("highlight");
+      }
+    });
+  }
+
+  function renderDetails(breaker, section) {
+    if (!breaker) {
+      detailsContent.innerHTML =
+        '<div class="no-selection">Tap a breaker to see its circuit and equipment.</div>';
+      return;
+    }
+
+    const devicesHtml = (breaker.devices || [])
+      .map(
+        (d, idx) => `
+      <div class="device-item">
+        <div>${d}</div>
+        <div class="device-tag">Device ${idx + 1}</div>
+      </div>
+    `
+      )
+      .join("");
+
+    detailsContent.innerHTML = `
+      <div class="details-main-label">${breaker.label}</div>
+      <div class="details-meta">
+        <span class="pill">ID · ${breaker.id}</span>
+        <span class="pill">SECTION · ${section.label}</span>
+        <span class="pill">TYPE · ${breaker.type.toUpperCase()}</span>
+      </div>
+      <div class="devices-list">
+        ${
+          devicesHtml ||
+          '<div class="no-selection">No specific equipment mapped yet for this circuit.</div>'
+        }
+      </div>
+    `;
+  }
+
+  function applySearchHighlight(query) {
+    const q = query.toLowerCase();
+    document.querySelectorAll(".breaker").forEach(el => {
+      el.classList.remove("highlight");
+    });
+
+    if (!q) {
+      highlightSelectedBreaker();
+      return;
+    }
+
+    SWITCHBOARD_DATA.sections.forEach(section => {
+      [...section.left, ...section.right].forEach(b => {
+        const labelMatch = (b.label || "").toLowerCase().includes(q);
+        const deviceMatch = (b.devices || []).some(d =>
+          d.toLowerCase().includes(q)
+        );
+        if (labelMatch || deviceMatch) {
+          const el = document.querySelector(
+            `.breaker[data-breaker-id="${b.id}"]`
+          );
+          if (el) el.classList.add("highlight");
+        }
+      });
+    });
+  }
+
+  searchInput.addEventListener("input", e => {
+    applySearchHighlight(e.target.value.trim());
+  });
+
+  clearSearchBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    applySearchHighlight("");
+  });
+
+  modePills.forEach(pill => {
+    pill.addEventListener("click", () => {
+      modePills.forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      currentMode = pill.dataset.mode;
+      if (currentMode === "normal") {
+        faultedBreakers.clear();
+        modeStatusText.textContent = "Normal · All ON";
+      } else {
+        modeStatusText.textContent = "Fault Sim · Tap to trip";
+      }
+      updateFaultVisuals();
+      highlightSelectedBreaker();
+    });
+  });
+
+  renderSections();
+  renderDetails(null, null);
+</script>
+</body>
+</html>
