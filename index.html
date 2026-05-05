@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Virtual Switchboard – Realistic Rockers</title>
+<title>Virtual Switchboard – Multi‑Module Breakers</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
   :root {
@@ -251,12 +251,12 @@
   }
 
   .slots {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    display: grid;
+    grid-auto-rows: 16px;
+    row-gap: 2px;
   }
 
-  .slot {
+  .slot-item {
     display: flex;
     align-items: center;
     gap: 3px;
@@ -294,23 +294,41 @@
   }
 
   .breaker-body-inner {
-    flex: 0 0 20px;
-    height: 12px;
+    flex: 0 0 22px;
+    height: 100%;
     border-radius: 2px;
     background: #020617;
     border: 1px solid #4b5563;
     position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    overflow: hidden;
   }
 
   .breaker-3p {
-    flex: 0 0 40px;
+    /* taller because it spans 3 modules */
   }
 
   .breaker-3p-rcd {
-    flex: 0 0 52px;
+    /* spans 4 modules: top = test, bottom 3 = rocker */
+  }
+
+  .rcd-head {
+    flex: 0 0 25%;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .rcd-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
   }
 
   .rocker {
@@ -365,11 +383,8 @@
   }
 
   .rcd-test {
-    position: absolute;
-    right: 2px;
-    bottom: 2px;
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
     border-radius: 999px;
     background: #f97316;
   }
@@ -504,7 +519,7 @@
     <div class="panel-header">
       <div>
         <div class="panel-title">Switchboard Visual</div>
-        <div class="panel-subtitle">4 sections · sideways scroll · real rockers</div>
+        <div class="panel-subtitle">4 sections · vertical modules · multi‑pole</div>
       </div>
       <div class="badge">Normal · Static</div>
     </div>
@@ -523,7 +538,7 @@
         </button>
       </div>
       <div class="hint">
-        Type any circuit or equipment name — matching breakers glow amber. Swipe sideways to move between sections.
+        Type any circuit or equipment name — matching breakers glow amber. Sections scroll sideways; each column is 24 module positions.
       </div>
     </div>
 
@@ -580,57 +595,56 @@
         label: "SECTION 1",
         tripStyle: "center",
         maxSlotsPerColumn: 24,
-        // module map for 1–48
         modules: {
-          // 1–24 left, 25–48 right
-          1:  { id: "S1-01", label: "BOTTOM MUFF TOAST", devices: ["Bottom Muffin Toaster"], type: "mcb" },
-          2:  { id: "S1-02", label: "TOP MUFF TOAST", devices: ["Top Muffin Toaster"], type: "mcb" },
-          3:  { id: "S1-03", label: "MINI DUPLO", devices: ["Mini Duplo"], type: "mcb" },
-          4:  { id: "S1-04", label: "PATTIE FREEZER", devices: ["Pattie Freezer"], type: "mcb" },
-          5:  { id: "S1-05", label: "STORE KITCHEN SOCKETS", devices: ["Store Kitchen GPOs"], type: "mcb" },
-          6:  { id: "S1-06", label: "HAND DRYERS 1 & 2", devices: ["Hand Dryers 1 & 2"], type: "mcb" },
-          7:  { id: "S1-07", label: "HAND DRYERS 3 & 4", devices: ["Hand Dryers 3 & 4"], type: "mcb" },
-          8:  { id: "S1-08", label: "FRIES FRYER VAT 1", devices: ["Fries Fryer Vat 1"], type: "mcb" },
+          // LEFT COLUMN 1–24
+          1:  { id: "S1-01", label: "BOTTOM MUFF TOAST", devices: ["Bottom Muffin Toaster"], type: "mcb", span: 1 },
+          2:  { id: "S1-02", label: "TOP MUFF TOAST", devices: ["Top Muffin Toaster"], type: "mcb", span: 1 },
+          3:  { id: "S1-03", label: "MINI DUPLO", devices: ["Mini Duplo"], type: "mcb", span: 1 },
+          4:  { id: "S1-04", label: "PATTIE FREEZER", devices: ["Pattie Freezer"], type: "mcb", span: 1 },
+          5:  { id: "S1-05", label: "STORE KITCHEN SOCKETS", devices: ["Store Kitchen GPOs"], type: "mcb", span: 1 },
+          6:  { id: "S1-06", label: "HAND DRYERS 1 & 2", devices: ["Hand Dryers 1 & 2"], type: "mcb", span: 1 },
+          7:  { id: "S1-07", label: "HAND DRYERS 3 & 4", devices: ["Hand Dryers 3 & 4"], type: "mcb", span: 1 },
+          8:  { id: "S1-08", label: "FRIES FRYER VAT 1", devices: ["Fries Fryer Vat 1"], type: "mcb", span: 1 },
 
-          // 9–12: 4‑wide 3‑phase with safety module
+          // 9–12: 4‑module 3‑phase + safety (top module = test, bottom 3 = rocker)
           9:  { id: "S1-09", label: "FRIES FRYER VAT 2", devices: ["Fries Fryer Vat 2"], type: "3p-rcd", span: 4 },
 
-          13: { id: "S1-13", label: "FRIES FRYER VAT 3", devices: ["Fries Fryer Vat 3"], type: "mcb" },
-          14: { id: "S1-14", label: "TOASTER 1–4", devices: ["Toasters 1–4"], type: "mcb" },
+          13: { id: "S1-13", label: "FRIES FRYER VAT 3", devices: ["Fries Fryer Vat 3"], type: "mcb", span: 1 },
+          14: { id: "S1-14", label: "TOASTER 1–4", devices: ["Toasters 1–4"], type: "mcb", span: 1 },
 
-          // 15–18: 4‑wide 3‑phase with safety module
+          // 15–18: 4‑module 3‑phase + safety
           15: { id: "S1-15", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "3p-rcd", span: 4 },
 
-          19: { id: "S1-BL-19", label: "BLANK", type: "blank" },
-          20: { id: "S1-20", label: "CLAM SHELL GRILL 1", devices: ["Clam Shell Grill 1"], type: "mcb" },
+          19: { id: "S1-BL-19", label: "BLANK", type: "blank", span: 1 },
+          20: { id: "S1-20", label: "CLAM SHELL GRILL 1", devices: ["Clam Shell Grill 1"], type: "mcb", span: 1 },
 
-          // 21–24: 4‑wide 3‑phase with safety module
+          // 21–24: 4‑module 3‑phase + safety
           21: { id: "S1-21", label: "CLAM SHELL GRILL 2", devices: ["Clam Shell Grill 2"], type: "3p-rcd", span: 4 },
 
           // RIGHT COLUMN 25–48
-          25: { id: "S1-25", label: "FILET FREEZER", devices: ["Filet Freezer"], type: "mcb" },
-          26: { id: "S1-26", label: "GPO 1", devices: ["GPO 1"], type: "mcb" },
-          27: { id: "S1-27", label: "FRYFILET ACCESSORIES", devices: ["Fryfilet Accessories"], type: "mcb" },
+          25: { id: "S1-25", label: "FILET FREEZER", devices: ["Filet Freezer"], type: "mcb", span: 1 },
+          26: { id: "S1-26", label: "GPO 1", devices: ["GPO 1"], type: "mcb", span: 1 },
+          27: { id: "S1-27", label: "FRYFILET ACCESSORIES", devices: ["Fryfilet Accessories"], type: "mcb", span: 1 },
 
-          // 28–30: 3‑wide 3‑phase (no extra module)
+          // 28–30: 3‑module 3‑phase
           28: { id: "S1-28", label: "3-PHASE OUTLET", devices: ["3-Phase Outlet"], type: "3p", span: 3 },
 
-          31: { id: "S1-31", label: "POS SYSTEM", devices: ["POS System"], type: "mcb" },
-          32: { id: "S1-BL-32", label: "BLANK", type: "blank" },
+          31: { id: "S1-31", label: "POS SYSTEM", devices: ["POS System"], type: "mcb", span: 1 },
+          32: { id: "S1-BL-32", label: "BLANK", type: "blank", span: 1 },
 
-          // 33–36: 4‑wide 3‑phase with safety module
+          // 33–36: 4‑module 3‑phase + safety
           33: { id: "S1-33", label: "INSECT MACHINE", devices: ["Insect Machine"], type: "3p-rcd", span: 4 },
 
-          37: { id: "S1-37", label: "REFRIGERATOR", devices: ["Refrigerator"], type: "mcb" },
-          38: { id: "S1-38", label: "FILET FRYER VAT 1 & 2", devices: ["Filet Fryer Vat 1 & 2"], type: "mcb" },
+          37: { id: "S1-37", label: "REFRIGERATOR", devices: ["Refrigerator"], type: "mcb", span: 1 },
+          38: { id: "S1-38", label: "FILET FRYER VAT 1 & 2", devices: ["Filet Fryer Vat 1 & 2"], type: "mcb", span: 1 },
 
-          // 39–42: 4‑wide 3‑phase with safety module
+          // 39–42: 4‑module 3‑phase + safety
           39: { id: "S1-39", label: "HOT WATER UNIT", devices: ["Hot Water Unit"], type: "3p-rcd", span: 4 },
 
-          43: { id: "S1-BL-43", label: "BLANK", type: "blank" },
-          44: { id: "S1-BL-44", label: "BLANK", type: "blank" },
+          43: { id: "S1-BL-43", label: "BLANK", type: "blank", span: 1 },
+          44: { id: "S1-BL-44", label: "BLANK", type: "blank", span: 1 },
 
-          // 45–48: 4‑wide 3‑phase with safety module
+          // 45–48: 4‑module 3‑phase + safety
           45: { id: "S1-45", label: "SPARE 3P", devices: ["Spare 3-Phase"], type: "3p-rcd", span: 4 }
         }
       },
@@ -744,7 +758,6 @@
   }
 
   function buildColumnSlotsSection1(section, side) {
-    const max = section.maxSlotsPerColumn;
     const slots = [];
     const start = side === "left" ? 1 : 25;
     const end = side === "left" ? 24 : 48;
@@ -753,7 +766,7 @@
     while (i <= end) {
       const mod = section.modules[i];
       if (!mod) {
-        slots.push({ slotNumber: i, module: { type: "blank", id: `S1-BL-${i}`, label: "BLANK" } });
+        slots.push({ slotNumber: i, module: { type: "blank", id: `S1-BL-${i}`, label: "BLANK", span: 1 } });
         i++;
         continue;
       }
@@ -766,8 +779,17 @@
 
   function buildColumnSlotsGeneric(list, maxSlots) {
     const slots = [];
-    for (let i = 0; i < maxSlots; i++) {
-      slots.push({ slotNumber: i + 1, module: list[i] || null });
+    let i = 0;
+    while (i < maxSlots) {
+      const mod = list[i];
+      if (!mod) {
+        slots.push({ slotNumber: i + 1, module: { type: "blank", id: `BL-${i + 1}`, label: "BLANK", span: 1 } });
+        i++;
+        continue;
+      }
+      const span = mod.span || 1;
+      slots.push({ slotNumber: i + 1, module: { ...mod, span } });
+      i += span;
     }
     return slots;
   }
@@ -807,23 +829,22 @@
 
       leftSlots.forEach(entry => {
         const { slotNumber, module } = entry;
-        const slotEl = document.createElement("div");
-        slotEl.className = "slot";
+        const span = module.span || 1;
+
+        const slotItem = document.createElement("div");
+        slotItem.className = "slot-item";
+        slotItem.style.gridRow = `span ${span}`;
 
         const num = document.createElement("div");
         num.className = "slot-number";
-        if (section.id === "S1") {
-          num.textContent = String(slotNumber).padStart(2, "0");
-        } else {
-          num.textContent = String(slotNumber).padStart(2, "0");
-        }
-        slotEl.appendChild(num);
+        num.textContent = String(slotNumber).padStart(2, "0");
+        slotItem.appendChild(num);
 
-        if (!module || module.type === "blank") {
+        if (module.type === "blank") {
           const blank = document.createElement("div");
           blank.className = "breaker blank";
-          slotEl.appendChild(blank);
-          leftSlotsEl.appendChild(slotEl);
+          slotItem.appendChild(blank);
+          leftSlotsEl.appendChild(slotItem);
           return;
         }
 
@@ -836,26 +857,45 @@
         const bodyInner = document.createElement("div");
         bodyInner.className = "breaker-body-inner";
 
-        if (module.type === "rcd") {
-          bodyInner.classList.add("breaker-rcd");
-        } else if (module.type === "3p") {
+        if (module.type === "3p") {
           bodyInner.classList.add("breaker-3p");
         } else if (module.type === "3p-rcd") {
           bodyInner.classList.add("breaker-3p-rcd");
         }
 
-        const rocker = document.createElement("div");
-        rocker.className = "rocker";
-        rocker.dataset.pos = rockerPosForState(section, "left", "on");
-        bodyInner.appendChild(rocker);
-
-        if (module.type === "rcd" || module.type === "3p-rcd") {
-          const indicator = document.createElement("div");
-          indicator.className = "indicator";
+        if (module.type === "3p-rcd") {
+          const head = document.createElement("div");
+          head.className = "rcd-head";
           const testBtn = document.createElement("div");
           testBtn.className = "rcd-test";
-          bodyInner.appendChild(indicator);
-          bodyInner.appendChild(testBtn);
+          head.appendChild(testBtn);
+          const indicator = document.createElement("div");
+          indicator.className = "indicator";
+          head.appendChild(indicator);
+
+          const body = document.createElement("div");
+          body.className = "rcd-body";
+          const rocker = document.createElement("div");
+          rocker.className = "rocker";
+          rocker.dataset.pos = rockerPosForState(section, "left", "on");
+          body.appendChild(rocker);
+
+          bodyInner.appendChild(head);
+          bodyInner.appendChild(body);
+        } else {
+          const rocker = document.createElement("div");
+          rocker.className = "rocker";
+          rocker.dataset.pos = rockerPosForState(section, "left", "on");
+          bodyInner.appendChild(rocker);
+
+          if (module.type === "rcd") {
+            const indicator = document.createElement("div");
+            indicator.className = "indicator";
+            const testBtn = document.createElement("div");
+            testBtn.className = "rcd-test";
+            bodyInner.appendChild(indicator);
+            bodyInner.appendChild(testBtn);
+          }
         }
 
         const label = document.createElement("div");
@@ -867,8 +907,8 @@
 
         breakerEl.addEventListener("click", () => onBreakerClick(module.id));
 
-        slotEl.appendChild(breakerEl);
-        leftSlotsEl.appendChild(slotEl);
+        slotItem.appendChild(breakerEl);
+        leftSlotsEl.appendChild(slotItem);
       });
 
       leftCol.appendChild(leftSlotsEl);
@@ -893,23 +933,22 @@
 
       rightSlots.forEach(entry => {
         const { slotNumber, module } = entry;
-        const slotEl = document.createElement("div");
-        slotEl.className = "slot";
+        const span = module.span || 1;
+
+        const slotItem = document.createElement("div");
+        slotItem.className = "slot-item";
+        slotItem.style.gridRow = `span ${span}`;
 
         const num = document.createElement("div");
         num.className = "slot-number";
-        if (section.id === "S1") {
-          num.textContent = String(slotNumber).padStart(2, "0");
-        } else {
-          num.textContent = String(slotNumber).padStart(2, "0");
-        }
-        slotEl.appendChild(num);
+        num.textContent = String(slotNumber).padStart(2, "0");
+        slotItem.appendChild(num);
 
-        if (!module || module.type === "blank") {
+        if (module.type === "blank") {
           const blank = document.createElement("div");
           blank.className = "breaker blank";
-          slotEl.appendChild(blank);
-          rightSlotsEl.appendChild(slotEl);
+          slotItem.appendChild(blank);
+          rightSlotsEl.appendChild(slotItem);
           return;
         }
 
@@ -922,26 +961,45 @@
         const bodyInner = document.createElement("div");
         bodyInner.className = "breaker-body-inner";
 
-        if (module.type === "rcd") {
-          bodyInner.classList.add("breaker-rcd");
-        } else if (module.type === "3p") {
+        if (module.type === "3p") {
           bodyInner.classList.add("breaker-3p");
         } else if (module.type === "3p-rcd") {
           bodyInner.classList.add("breaker-3p-rcd");
         }
 
-        const rocker = document.createElement("div");
-        rocker.className = "rocker";
-        rocker.dataset.pos = rockerPosForState(section, "right", "on");
-        bodyInner.appendChild(rocker);
-
-        if (module.type === "rcd" || module.type === "3p-rcd") {
-          const indicator = document.createElement("div");
-          indicator.className = "indicator";
+        if (module.type === "3p-rcd") {
+          const head = document.createElement("div");
+          head.className = "rcd-head";
           const testBtn = document.createElement("div");
           testBtn.className = "rcd-test";
-          bodyInner.appendChild(indicator);
-          bodyInner.appendChild(testBtn);
+          head.appendChild(testBtn);
+          const indicator = document.createElement("div");
+          indicator.className = "indicator";
+          head.appendChild(indicator);
+
+          const body = document.createElement("div");
+          body.className = "rcd-body";
+          const rocker = document.createElement("div");
+          rocker.className = "rocker";
+          rocker.dataset.pos = rockerPosForState(section, "right", "on");
+          body.appendChild(rocker);
+
+          bodyInner.appendChild(head);
+          bodyInner.appendChild(body);
+        } else {
+          const rocker = document.createElement("div");
+          rocker.className = "rocker";
+          rocker.dataset.pos = rockerPosForState(section, "right", "on");
+          bodyInner.appendChild(rocker);
+
+          if (module.type === "rcd") {
+            const indicator = document.createElement("div");
+            indicator.className = "indicator";
+            const testBtn = document.createElement("div");
+            testBtn.className = "rcd-test";
+            bodyInner.appendChild(indicator);
+            bodyInner.appendChild(testBtn);
+          }
         }
 
         const label = document.createElement("div");
@@ -953,8 +1011,8 @@
 
         breakerEl.addEventListener("click", () => onBreakerClick(module.id));
 
-        slotEl.appendChild(breakerEl);
-        rightSlotsEl.appendChild(slotEl);
+        slotItem.appendChild(breakerEl);
+        rightSlotsEl.appendChild(slotItem);
       });
 
       rightCol.appendChild(rightSlotsEl);
@@ -1073,6 +1131,7 @@
         <span class="pill">ID · ${breaker.id}</span>
         <span class="pill">SECTION · ${section.label}</span>
         <span class="pill">TYPE · ${typeLabel}</span>
+        <span class="pill">SPAN · ${breaker.span || 1} MODULES</span>
       </div>
       <div class="devices-list">
         ${
