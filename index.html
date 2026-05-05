@@ -1,232 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Switchboard Visual</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-
-/* -----------------------------------------------------------
-   GLOBAL LAYOUT + THEME
------------------------------------------------------------ */
-
-body {
-  margin: 0;
-  padding: 0;
-  background: #111;
-  color: #eee;
-  font-family: Arial, sans-serif;
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-#app {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-/* Left = switchboard, Right = details panel */
-#left {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-#right {
-  width: 320px;
-  padding: 20px;
-  background: #1a1a1a;
-  border-left: 2px solid #333;
-  overflow-y: auto;
-}
-
-/* Section titles */
-.section-title {
-  font-size: 20px;
-  margin: 20px 0 10px;
-  color: #f0f0f0;
-}
-
-/* -----------------------------------------------------------
-   SWITCHBOARD GRID
------------------------------------------------------------ */
-
-.section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 40px;
-}
-
-.column {
-  display: grid;
-  grid-template-rows: repeat(24, 28px);
-  gap: 4px;
-  background: #222;
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #333;
-}
-
-/* Slot numbers */
-.slot-label {
-  font-size: 10px;
-  color: #aaa;
-  margin-bottom: -2px;
-}
-
-/* -----------------------------------------------------------
-   BREAKERS (ALL TYPES)
------------------------------------------------------------ */
-
-.breaker {
-  background: #2d2d2d;
-  border: 1px solid #444;
-  border-radius: 4px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-/* Highlight when searched */
-.breaker.search-hit {
-  outline: 2px solid #ffb000;
-}
-
-/* -----------------------------------------------------------
-   1‑POLE BREAKER (vertical paddle)
------------------------------------------------------------ */
-
-.breaker-body-1p {
-  width: 70%;
-  height: 80%;
-  background: #e5e7eb;
-  border: 1px solid #000;
-  border-radius: 3px;
-  transition: transform 0.1s ease-out;
-}
-
-.breaker-body-1p[data-pos="left"]   { transform: translateX(-4px); }
-.breaker-body-1p[data-pos="center"] { transform: translateX(0); }
-.breaker-body-1p[data-pos="right"]  { transform: translateX(4px); }
-
-/* -----------------------------------------------------------
-   3‑PHASE BREAKER (THE ONE YOU WANT)
-   Three vertical paddles, side‑by‑side, spanning 3 slots
------------------------------------------------------------ */
-
-.breaker[data-type="3p"],
-.breaker[data-type="3p-rcd"] {
-  grid-row: span 3;
-}
-
-.rocker-3p {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* ← three vertical paddles side‑by‑side */
-  width: 90%;
-  height: 90%;
-  transition: transform 0.1s ease-out;
-}
-
-.rocker-3p .paddle {
-  background: #e5e7eb;
-  border: 1px solid #000;
-  border-radius: 3px;
-}
-
-/* horizontal throw */
-.rocker-3p[data-pos="left"]   { transform: translateX(-4px); }
-.rocker-3p[data-pos="center"] { transform: translateX(0); }
-.rocker-3p[data-pos="right"]  { transform: translateX(4px); }
-
-/* -----------------------------------------------------------
-   RCBO (4‑module)
-   Top = test button + indicator
-   Bottom = 3‑phase rocker
------------------------------------------------------------ */
-
-.rcbo {
-  display: grid;
-  grid-template-rows: 1fr 3fr;
-  width: 90%;
-  height: 90%;
-}
-
-.rcbo-head {
-  background: #dcdcdc;
-  border: 1px solid #000;
-  border-radius: 3px 3px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2px 4px;
-}
-
-.rcbo-test {
-  width: 14px;
-  height: 14px;
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 50%;
-}
-
-.rcbo-indicator {
-  width: 10px;
-  height: 10px;
-  background: #0f0;
-  border: 1px solid #000;
-  border-radius: 2px;
-}
-
-.rcbo-body {
-  border: 1px solid #000;
-  border-top: none;
-  border-radius: 0 0 3px 3px;
-  background: #2d2d2d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-</style>
+  <meta charset="UTF-8">
+  <title>Switchboard UI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #111; color: #eee; height: 100vh; display: flex; justify-content: center; align-items: stretch; padding: 20px; }
+    #app { display: flex; gap: 20px; width: 100%; max-width: 1400px; height: 100%; }
+    #left { flex: 3; display: flex; flex-direction: column; }
+    #right { flex: 1; background: #181818; border-radius: 8px; padding: 16px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
+    #search { width: 100%; padding: 10px; margin-bottom: 16px; background: #222; border: 1px solid #444; color: #eee; border-radius: 4px; }
+    #board { flex: 1; background: #151515; border-radius: 8px; border: 1px solid #333; padding: 16px; overflow: auto; }
+    .section-wrapper { margin-bottom: 18px; border-radius: 6px; border: 1px solid #333; background: #101010; padding: 10px; }
+    .section-title { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
+    .section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .column { background: #181818; border-radius: 4px; border: 1px solid #333; padding: 6px 4px; display: flex; flex-direction: column; gap: 2px; }
+    .slot-row { display: grid; grid-template-columns: 26px 1fr; align-items: center; min-height: 26px; }
+    .slot-label { font-size: 11px; color: #888; text-align: right; padding-right: 4px; }
+    .slot-body { position: relative; height: 26px; display: flex; align-items: center; }
+    .breaker { position: absolute; left: 0; right: 0; cursor: pointer; display: flex; justify-content: center; }
+    .breaker-body-1p { width: 18px; height: 24px; background: #d0d0d0; border: 1px solid #555; border-radius: 3px; position: relative; }
+    .breaker-body-1p::before { content: ""; position: absolute; left: 50%; top: 3px; width: 6px; height: 18px; margin-left: -3px; background: #444; border-radius: 2px; }
+    .rocker-3p { display: flex; flex-direction: row; gap: 2px; height: 24px; }
+    .paddle { width: 10px; height: 24px; background: #d0d0d0; border: 1px solid #555; border-radius: 3px; position: relative; }
+    .paddle::before { content: ""; position: absolute; left: 50%; top: 3px; width: 4px; height: 18px; margin-left: -2px; background: #444; border-radius: 2px; }
+    .rcbo { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .rcbo-head { width: 40px; height: 16px; background: #d0d0d0; border: 1px solid #555; border-radius: 3px; display: flex; justify-content: space-between; padding: 2px 3px; }
+    .rcbo-test { width: 8px; height: 8px; background: #ff8800; border-radius: 50%; }
+    .rcbo-indicator { width: 10px; height: 8px; background: #0f0; border-radius: 2px; }
+    #fault-btn { width: 100%; padding: 8px; margin-top: 10px; background: #333; color: #eee; border: 1px solid #555; border-radius: 4px; cursor: pointer; }
+  </style>
 </head>
 <body>
 <div id="app">
-
   <div id="left">
-
-    <!-- SEARCH BAR -->
-    <input id="search" type="text" placeholder="Search circuits…" 
-           style="width:100%;padding:10px;margin-bottom:20px;
-                  background:#222;border:1px solid #444;color:#eee;
-                  border-radius:4px;">
-
-    <!-- SWITCHBOARD RENDER TARGET -->
+    <input id="search" type="text" placeholder="Search circuits…">
     <div id="board"></div>
-
+    <button id="fault-btn">Toggle Fault Mode</button>
   </div>
-
   <div id="right">
     <h2>Details</h2>
     <div id="details">Select a breaker…</div>
   </div>
-
 </div>
 
 <script>
-
-/* -----------------------------------------------------------
-   SWITCHBOARD DATA (EDIT THIS TO MATCH YOUR REAL BOARD)
-   Each section has left + right columns, each with 24 slots.
-   Breakers specify: slot, size, type, label.
------------------------------------------------------------ */
-
 const boardData = [
   {
     name: "SECTION 1",
@@ -234,314 +52,137 @@ const boardData = [
     left: [
       { slot: 1, size: 1, type: "1p", label: "Lights" },
       { slot: 2, size: 3, type: "3p", label: "Aircon" },
-      { slot: 6, size: 4, type: "3p-rcd", label: "Workshop RCBO" },
+      { slot: 6, size: 4, type: "3p-rcd", label: "Workshop RCBO" }
     ],
     right: [
       { slot: 1, size: 1, type: "1p", label: "GPOs" },
-      { slot: 3, size: 3, type: "3p", label: "Pool Pump" },
+      { slot: 3, size: 3, type: "3p", label: "Pool Pump" }
     ]
-  },
-
-  {
-    name: "SECTION 2",
-    tripStyle: "center",
-    left: [
-      { slot: 1, size: 1, type: "1p", label: "Lights 2" },
-    ],
-    right: [
-      { slot: 1, size: 3, type: "3p", label: "Shed" },
-    ]
-  },
-
-  {
-    name: "SECTION 3",
-    tripStyle: "center",
-    left: [],
-    right: []
-  },
-
-  {
-    name: "SECTION 4",
-    tripStyle: "off",
-    left: [
-      { slot: 1, size: 3, type: "3p", label: "Main Feed" },
-    ],
-    right: []
   }
 ];
-
-/* -----------------------------------------------------------
-   RENDERING ENGINE — BUILDS THE ENTIRE BOARD
------------------------------------------------------------ */
 
 function renderBoard() {
   const board = document.getElementById("board");
   board.innerHTML = "";
-
-  boardData.forEach((section, sIndex) => {
-    const secEl = document.createElement("div");
-
+  boardData.forEach(section => {
+    const wrap = document.createElement("div");
+    wrap.className = "section-wrapper";
     const title = document.createElement("div");
     title.className = "section-title";
     title.textContent = section.name;
-    secEl.appendChild(title);
-
-    const secGrid = document.createElement("div");
-    secGrid.className = "section";
-
-    const leftCol = buildColumn(section.left, "left", section);
-    const rightCol = buildColumn(section.right, "right", section);
-
-    secGrid.appendChild(leftCol);
-    secGrid.appendChild(rightCol);
-
-    secEl.appendChild(secGrid);
-    board.appendChild(secEl);
+    wrap.appendChild(title);
+    const grid = document.createElement("div");
+    grid.className = "section";
+    grid.appendChild(buildColumn(section.left, "left", section));
+    grid.appendChild(buildColumn(section.right, "right", section));
+    wrap.appendChild(grid);
+    board.appendChild(wrap);
   });
 }
 
 function buildColumn(breakers, side, section) {
   const col = document.createElement("div");
   col.className = "column";
-
-  // 24 slots
   const slots = Array(24).fill(null);
-
-  // place breakers
-  breakers.forEach(b => {
-    for (let i = 0; i < b.size; i++) {
-      slots[b.slot - 1 + i] = b;
-    }
-  });
-
-  // render slots
+  breakers.forEach(b => { for (let i = 0; i < b.size; i++) slots[b.slot - 1 + i] = b; });
   for (let i = 0; i < 24; i++) {
-    const slotWrap = document.createElement("div");
-
+    const row = document.createElement("div");
+    row.className = "slot-row";
     const label = document.createElement("div");
     label.className = "slot-label";
     label.textContent = i + 1;
-    slotWrap.appendChild(label);
-
+    row.appendChild(label);
+    const body = document.createElement("div");
+    body.className = "slot-body";
     const breaker = slots[i];
     if (breaker && breaker.slot - 1 === i) {
-      const bEl = renderBreaker(breaker, side, section);
-      slotWrap.appendChild(bEl);
-    } else if (!breaker) {
-      const empty = document.createElement("div");
-      empty.style.height = "24px";
-      slotWrap.appendChild(empty);
+      const el = renderBreaker(breaker, side, section);
+      const h = 26 * breaker.size;
+      el.style.height = h + "px";
+      body.style.height = h + "px";
+      row.style.minHeight = h + "px";
+      body.appendChild(el);
     }
-
-    col.appendChild(slotWrap);
+    row.appendChild(body);
+    col.appendChild(row);
   }
-
   return col;
 }
-/* -----------------------------------------------------------
-   RENDER A BREAKER (1‑pole, 3‑phase, RCBO)
------------------------------------------------------------ */
 
 function renderBreaker(b, side, section) {
   const el = document.createElement("div");
   el.className = "breaker";
   el.dataset.type = b.type;
   el.dataset.label = b.label;
-
-  // click → show details
   el.addEventListener("click", () => showDetails(b, side, section));
-
-  // determine rocker position
-  const pos = rockerPos(section, side, false);
-
-  // 1‑pole
   if (b.type === "1p") {
     const body = document.createElement("div");
     body.className = "breaker-body-1p";
-    body.dataset.pos = pos;
     el.appendChild(body);
     return el;
   }
-
-  // 3‑phase (3 vertical paddles)
   if (b.type === "3p") {
     const rock = document.createElement("div");
     rock.className = "rocker-3p";
-    rock.dataset.pos = pos;
-
     for (let i = 0; i < 3; i++) {
       const pad = document.createElement("div");
       pad.className = "paddle";
       rock.appendChild(pad);
     }
-
     el.appendChild(rock);
     return el;
   }
-
-  // RCBO (4‑module: head + 3‑phase rocker)
   if (b.type === "3p-rcd") {
     const rcbo = document.createElement("div");
     rcbo.className = "rcbo";
-
-    // head
     const head = document.createElement("div");
     head.className = "rcbo-head";
-
-    const testBtn = document.createElement("div");
-    testBtn.className = "rcbo-test";
-
-    const indicator = document.createElement("div");
-    indicator.className = "rcbo-indicator";
-
-    head.appendChild(testBtn);
-    head.appendChild(indicator);
-
-    // body (3‑phase rocker)
+    const test = document.createElement("div");
+    test.className = "rcbo-test";
+    const ind = document.createElement("div");
+    ind.className = "rcbo-indicator";
+    head.appendChild(test);
+    head.appendChild(ind);
     const body = document.createElement("div");
     body.className = "rcbo-body";
-
     const rock = document.createElement("div");
     rock.className = "rocker-3p";
-    rock.dataset.pos = pos;
-
     for (let i = 0; i < 3; i++) {
       const pad = document.createElement("div");
       pad.className = "paddle";
       rock.appendChild(pad);
     }
-
     body.appendChild(rock);
-
     rcbo.appendChild(head);
     rcbo.appendChild(body);
-
     el.appendChild(rcbo);
     return el;
   }
-
   return el;
 }
 
-/* -----------------------------------------------------------
-   ROCKER POSITION LOGIC
-   left / center / right depending on section + fault state
------------------------------------------------------------ */
-
-function rockerPos(section, side, isFault) {
-  // normal ON position
-  if (!isFault) {
-    return side === "left" ? "right" : "left";
-  }
-
-  // sections 1–3 trip to center
-  if (section.tripStyle === "center") {
-    return "center";
-  }
-
-  // section 4 trips fully off
-  return side === "left" ? "left" : "right";
-}
-
-/* -----------------------------------------------------------
-   DETAILS PANEL
------------------------------------------------------------ */
-
 function showDetails(b, side, section) {
-  const d = document.getElementById("details");
-  d.innerHTML = `
-    <div style="font-size:18px;margin-bottom:10px;">${b.label}</div>
-    <div><b>Type:</b> ${b.type}</div>
-    <div><b>Size:</b> ${b.size} modules</div>
-    <div><b>Side:</b> ${side}</div>
-    <div><b>Section:</b> ${section.name}</div>
-  `;
+  document.getElementById("details").textContent =
+    `Label: ${b.label}\nType: ${b.type}\nSize: ${b.size}\nSide: ${side}\nSection: ${section.name}`;
 }
-/* -----------------------------------------------------------
-   SEARCH SYSTEM — HIGHLIGHT MATCHING BREAKERS
------------------------------------------------------------ */
 
 document.getElementById("search").addEventListener("input", e => {
   const q = e.target.value.toLowerCase();
-  const breakers = document.querySelectorAll(".breaker");
-
-  breakers.forEach(b => {
-    const label = b.dataset.label.toLowerCase();
-    if (q && label.includes(q)) {
-      b.classList.add("search-hit");
-    } else {
-      b.classList.remove("search-hit");
-    }
+  document.querySelectorAll(".breaker").forEach(b => {
+    const label = (b.dataset.label || "").toLowerCase();
+    b.style.outline = q && label.includes(q) ? "2px solid #ff0" : "none";
   });
 });
 
-/* -----------------------------------------------------------
-   FAULT MODE (SIMULATED)
-   This toggles breakers into fault positions for demo purposes.
------------------------------------------------------------ */
-
-let faultActive = false;
-
-function toggleFault() {
-  faultActive = !faultActive;
-
-  const breakers = document.querySelectorAll(".breaker");
-
-  breakers.forEach(b => {
-    const type = b.dataset.type;
-    const sectionName = b.closest(".section").querySelector(".section-title").textContent;
-    const section = boardData.find(s => s.name === sectionName);
-
-    const side = b.closest(".column").previousSibling ? "left" : "right";
-
-    const pos = rockerPos(section, side, faultActive);
-
-    if (type === "1p") {
-      const body = b.querySelector(".breaker-body-1p");
-      if (body) body.dataset.pos = pos;
-    }
-
-    if (type === "3p") {
-      const rock = b.querySelector(".rocker-3p");
-      if (rock) rock.dataset.pos = pos;
-    }
-
-    if (type === "3p-rcd") {
-      const rock = b.querySelector(".rocker-3p");
-      if (rock) rock.dataset.pos = pos;
-
-      const indicator = b.querySelector(".rcbo-indicator");
-      if (indicator) indicator.style.background = faultActive ? "#f00" : "#0f0";
-    }
+let fault = false;
+document.getElementById("fault-btn").addEventListener("click", () => {
+  fault = !fault;
+  document.querySelectorAll(".rcbo-indicator").forEach(ind => {
+    ind.style.background = fault ? "#f00" : "#0f0";
   });
-}
-
-/* -----------------------------------------------------------
-   ADD FAULT BUTTON
------------------------------------------------------------ */
-
-const faultBtn = document.createElement("button");
-faultBtn.textContent = "Toggle Fault Mode";
-faultBtn.style.cssText = `
-  width: 100%;
-  padding: 10px;
-  margin-top: 20px;
-  background: #333;
-  color: #eee;
-  border: 1px solid #555;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-faultBtn.addEventListener("click", toggleFault);
-
-document.getElementById("left").appendChild(faultBtn);
-
-/* -----------------------------------------------------------
-   INITIAL RENDER
------------------------------------------------------------ */
+});
 
 renderBoard();
-
 </script>
 </body>
 </html>
